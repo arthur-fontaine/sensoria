@@ -1,0 +1,41 @@
+{
+  "name": "sensoria",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "packageManager": "pnpm@7.15.0",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "build": "dotenv turbo run build",
+    "dev": "dotenv turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "test": "dotenv turbo run test",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.2.0",
+    "@commitlint/config-conventional": "^17.2.0",
+    "@typescript-eslint/eslint-plugin": "^5.60.1",
+    "@typescript-eslint/parser": "^5.60.1",
+    "@whitebird/tsconfig": "latest",
+    "dotenv-cli": "^7.2.1",
+    "eslint": "^8.43.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jsonc": "^2.9.0",
+    "eslint-plugin-unicorn": "^47.0.0",
+    "husky": "^8.0.0",
+    "turbo": "latest",
+    "typescript": "^5.1.3"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@gqty/react@2.1.0": "patches/@gqty__react@2.1.0.patch"
+    }
+  }
+}
