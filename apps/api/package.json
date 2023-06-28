@@ -13,8 +13,11 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "drizzle-kit": "^0.19.2",
+    "drizzle-orm": "^0.27.0",
     "garph": "^0.5.4",
-    "graphql-yoga": "^4.0.2"
+    "graphql-yoga": "^4.0.2",
+    "postgres": "^3.3.5"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",
