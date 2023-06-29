@@ -42,6 +42,16 @@ API_PORT=2023
 CLIENT_PORT=2024
 ```
 
+To access database, you need to run the following command:
+
+```sh
+cd apps/api
+docker-compose up -d
+pnpm migration:run
+```
+
+You can copy the `.env.example` file located in `apps/api` and rename it to `.env` to define the database credentials.
+
 ## Applications and Packages overview
 
 | Name | Description | Location |
