@@ -1,18 +1,16 @@
 import {relations} from 'drizzle-orm'
 import {
-  pgSchema, serial, varchar, pgEnum, timestamp,
+  pgTable, serial, varchar, pgEnum, timestamp,
   text, numeric, customType, integer,
 } from 'drizzle-orm/pg-core'
 
-export const sensorSchema = pgSchema('sensor')
-export const userSchema = pgSchema('user')
-export const roleSchema = pgSchema('role')
-export const tagSchema = pgSchema('tag')
-export const triggerSchema = pgSchema('trigger')
-export const blockSchema = pgSchema('block')
-
-const impactEnum = pgEnum('impact', ['high', 'medium', 'normal', 'post_high'])
-const permissionEnum = pgEnum ('permission', [
+export const impactEnum = pgEnum('impact', [
+  'high',
+  'medium',
+  'normal',
+  'post_high',
+])
+export const permissionEnum = pgEnum ('permission', [
   'view_rooms',
   'manage_rooms',
   'add_rooms',
@@ -38,7 +36,7 @@ const customBlob = customType<{ data: Blob; driverData: string }>({
 
 const customPoint = customType<{ data: [number, number] }>({
   dataType() {
-    return 'string'
+    return 'text'
   },
   toDriver(value): string {
     return JSON.stringify(value)
@@ -62,11 +60,12 @@ const customJsonb = <TData>(name: string) =>
     },
   })(name)
 
-export const Sensors = sensorSchema.table('Sensors', {
+export const Sensors = pgTable('Sensors', {
   sensorId: serial('sensor_ID').primaryKey(),
   sensorConfigId: integer('sensor_config_ID')
     .references(() => SensorConfig.sensorConfigId, { onDelete: 'cascade' }),
-  tagId: text('tag_ID').references(() => Tags.tagId, { onDelete: 'cascade' }),
+  tagId: integer('tag_ID')
+    .references(() => Tags.tagId, { onDelete: 'cascade' }),
   maker: varchar('maker'),
   name: varchar('name'),
   serialNumber: varchar('serial_number'),
@@ -76,7 +75,7 @@ export const Sensors = sensorSchema.table('Sensors', {
   description: text('description'),
 })
 
-export const Mesures = triggerSchema.table('Mesures', {
+export const Mesures = pgTable('Mesures', {
   measureId: serial('mesure_ID').primaryKey(),
   sensorId: integer('sensor_ID')
     .references(() => Sensors.sensorId, { onDelete: 'cascade' }),
@@ -84,7 +83,7 @@ export const Mesures = triggerSchema.table('Mesures', {
   timestamp: timestamp('timestamp'),
 })
 
-export const Users = userSchema.table('Users', {
+export const Users = pgTable('Users', {
   userId: serial('user_ID').primaryKey(),
   invitationId: integer('invitation_ID')
     .references(() => Invitations.invitationId, { onDelete: 'cascade' }),
@@ -97,11 +96,11 @@ export const Users = userSchema.table('Users', {
   permissions: permissionEnum('permissions').array(),
 })
 
-export const Roles = roleSchema.table('Roles', {
+export const Roles = pgTable('Roles', {
   roleId: serial('role_ID').primaryKey(),
 })
 
-export const Halls = blockSchema.table('Halls', {
+export const Halls = pgTable('Halls', {
   hallId: serial('hall_ID').primaryKey(),
   sensorId: integer('sensor_ID')
     .references(() => Sensors.sensorId, { onDelete: 'cascade' }),
@@ -112,7 +111,7 @@ export const Halls = blockSchema.table('Halls', {
   map: customBlob('map'),
 })
 
-export const Notifications = userSchema.table('Notifications', {
+export const Notifications = pgTable('Notifications', {
   notificationId: serial('notification_ID').primaryKey(),
   measureId: integer('mesure_ID')
     .references(() => Mesures.measureId, { onDelete: 'cascade' }),
@@ -122,7 +121,7 @@ export const Notifications = userSchema.table('Notifications', {
   timestamp: timestamp('timestamp'),
 })
 
-export const SensorConfig = sensorSchema.table('SensorConfig', {
+export const SensorConfig = pgTable('SensorConfig', {
   sensorConfigId: serial('sensor_config_ID').primaryKey(),
   config : customJsonb<
    { valueMin?: number; valueMax?: number } |
@@ -130,14 +129,14 @@ export const SensorConfig = sensorSchema.table('SensorConfig', {
   >('config'),
 })
 
-export const Tags = tagSchema.table('Tags', {
+export const Tags = pgTable('Tags', {
   tagId: serial('tag_ID').primaryKey(),
   typeSensorId: integer('type_sensor_ID')
     .references(() => TypeSensor.typeSensorId),
   name: varchar('name'),
 })
 
-export const Thresholds = triggerSchema.table('Thresholds', {
+export const Thresholds = pgTable('Thresholds', {
   thresholdId: serial('threshold_ID').primaryKey(),
   sensorId: integer('sensor_ID').references(() => Sensors.sensorId),
   name: varchar('name'),
@@ -145,18 +144,18 @@ export const Thresholds = triggerSchema.table('Thresholds', {
   valueMin: numeric('value_min'),
 })
 
-export const Blocks = blockSchema.table('Blocks', {
+export const Blocks = pgTable('Blocks', {
   blockId: serial('block_ID').primaryKey(),
   name: varchar('name'),
-  localisation: customPoint ('localisation'),
+  location: customPoint('location'),
 })
 
-export const UsersAccess = userSchema.table('UsersAccess', {
+export const UsersAccess = pgTable('UsersAccess', {
   userAccessId: serial('user_access_ID').primaryKey(),
   accessId: integer('access_ID').references(() => Access.accessId),
 })
 
-export const Access = blockSchema.table('Access', {
+export const Access = pgTable('Access', {
   accessId: serial('access_ID').primaryKey(),
   hallId: integer('hall_ID'),
 })
@@ -165,24 +164,24 @@ export const usersRelations = relations(Access, ({ many }) => ({
   Halls: many(Halls),
 }))
 
-export const RolesAccess = blockSchema.table('RolesAccess', {
+export const RolesAccess = pgTable('RolesAccess', {
   accessId: serial('access_ID').primaryKey(),
   roleId: integer('role_ID').references(() => Roles.roleId),
 })
 
-export const TagsConfig = tagSchema.table('TagsConfig', {
+export const TagsConfig = pgTable('TagsConfig', {
   typeSensorId: integer('type_sensor_ID')
     .references(() => TypeSensor.typeSensorId, { onDelete: 'cascade' }),
   sensorConfigId: integer('sensor_config_ID')
     .references(() => SensorConfig.sensorConfigId, { onDelete: 'cascade' }),
 })
 
-export const TypeSensor = sensorSchema.table('TypeSensor', {
+export const TypeSensor = pgTable('TypeSensor', {
   typeSensorId: serial('type_sensor_ID').primaryKey(),
   name: varchar('name'),
 })
 
-export const Alarms = triggerSchema.table('Alarms', {
+export const Alarms = pgTable('Alarms', {
   alertId: serial('alert_ID').primaryKey(),
   sensorId: integer('sensor_ID')
     .references(() => Sensors.sensorId, { onDelete: 'cascade' }),
@@ -190,7 +189,7 @@ export const Alarms = triggerSchema.table('Alarms', {
   timestamp: timestamp('timestamp'),
 })
 
-export const Actions = triggerSchema.table('Actions', {
+export const Actions = pgTable('Actions', {
   actionId: serial('action_ID').primaryKey(),
   sensorId: integer('sensor_ID')
     .references(() => Sensors.sensorId, { onDelete: 'cascade' }),
@@ -198,13 +197,13 @@ export const Actions = triggerSchema.table('Actions', {
   timestamp: timestamp('timestamp'),
 })
 
-export const OnboardingRating = userSchema.table('OnboardingRating', {
+export const OnboardingRating = pgTable('OnboardingRating', {
   onboardingRatingId: serial('onboarding_rating_id').primaryKey(),
   rate: numeric('rate'),
   note: text('note'),
 })
 
-export const Invitations = userSchema.table('Invitations', {
+export const Invitations = pgTable('Invitations', {
   invitationId: serial('invitation_ID').primaryKey(),
   userId: integer('user_ID'),
   email: varchar('email'),
