@@ -5,6 +5,7 @@ import { Dashboard } from './views/dashboard'
 import { Login } from './views/login'
 import { Onboarding } from './views/onboarding'
 import { Tag } from './views/tag'
+import { Updatepassword } from './views/updatepassword'
 import { Users } from './views/users'
 
 import { useRoute } from '@/hooks/use-route'
@@ -12,6 +13,7 @@ import { useRoute } from '@/hooks/use-route'
 export function App() {
   const route = useRoute([
     'Login',
+    'Updatepassword',
     'Onboarding',
     'Dashboard',
     'Users',
@@ -21,6 +23,9 @@ export function App() {
   switch (route?.name) {
     case 'Login': {
       return <Login />
+    }
+    case 'Updatepassword': {
+      return <Updatepassword />
     }
     case 'Onboarding': {
       return <Onboarding />
