@@ -1,7 +1,7 @@
-import { compare } from 'bcryptjs'
+import bcrypt from 'bcryptjs'
 import dotenv from 'dotenv'
 import { eq } from 'drizzle-orm'
-import { sign } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 
 import type { Resolvers } from '../..'
 import { database } from '../../db'
@@ -20,6 +20,7 @@ export const loginQueryResolver: NonNullable<
 > = (_parent, args) => {
   return authentication(args.email, args.password)
 }
+
 async function authentication(email: string, password: string) {
   const userPassword = await database
     .select({ password: Users.password })
@@ -31,13 +32,13 @@ async function authentication(email: string, password: string) {
     throw new Error('User not found')
   }
 
-  const validPassword = compare(password, userPassword)
+  const validPassword = bcrypt.compare(password, userPassword)
 
   if (!validPassword) {
     throw new Error('Invalid password')
   }
 
-  const token = sign({ userId: email }, JWT_SECRET)
+  const token = jwt.sign({ userId: email }, JWT_SECRET)
 
   return token
 }
