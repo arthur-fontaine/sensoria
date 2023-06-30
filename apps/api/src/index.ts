@@ -1,12 +1,14 @@
 import { type InferResolvers, buildSchema, g } from 'garph'
-import type { YogaInitialContext } from 'graphql-yoga'
 
+import type { Context } from './context'
 import { createBlockMutationResolver } from './resolvers/mutations/create-block'
 import {
   modifyPasswordMutationResolver,
 } from './resolvers/mutations/modify-password'
 import { loginQueryResolver } from './resolvers/queries/authentication'
+import { getAlarmsQueryResolver } from './resolvers/queries/get-alarms'
 import { getObjectsQueryResolver } from './resolvers/queries/get-objects'
+import { alarmsType } from './types/alarms'
 import { blockInputType, blockType } from './types/block'
 import { objectType } from './types/object'
 
@@ -18,6 +20,8 @@ export const queryType = g.type('Query', {
     }),
   objects: g.ref(() => objectType).list()
     .description('Get all objects'),
+  getAlarms: g.ref(alarmsType).list()
+    .description('Get all alarms'),
 })
 
 export const mutationType = g.type('Mutation', {
@@ -38,12 +42,13 @@ export const mutationType = g.type('Mutation', {
 export type Resolvers = InferResolvers<{
   Query: typeof queryType
   Mutation: typeof mutationType
-}, { context: YogaInitialContext }>
+}, { context: Context }>
 
 const resolvers: Resolvers = {
   Query: {
     objects: getObjectsQueryResolver,
     authentication: loginQueryResolver,
+    getAlarms: getAlarmsQueryResolver,
   },
   Mutation: {
     createBlock: createBlockMutationResolver,
