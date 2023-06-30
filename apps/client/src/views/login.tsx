@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { EyeOff } from 'lucide-react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
@@ -35,8 +36,14 @@ const FormSchema = z.object({
 })
 
 export function Login() {
+  const [showPassword, setShowPassword] = useState(false)
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
   })
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -81,13 +88,15 @@ export function Login() {
                     <div className='relative'>
                       <div className='absolute inset-y-0 
                 right-0 flex items-center pl-2'>
-                        <Button asChild variant="ghost" size="icon" >
+                        <Button asChild variant="ghost" size="icon" 
+                          onClick={() => setShowPassword(!showPassword)} >
                           <div>
                             <EyeOff  color='#CBD5E1' size={24} />
                           </div>
                         </Button>
                       </div>
-                      <Input type="Password" placeholder="Mot de passe" 
+                      <Input type={showPassword ? 'text' : 'password'} 
+                        placeholder="Mot de passe" 
                         {...field} />
                     </div>
                   </FormControl>
