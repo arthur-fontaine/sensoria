@@ -3,7 +3,10 @@
 @tailwind utilities;
  
 @layer base {
+
+
   :root {
+
     --background: 0 0% 100%;
     --foreground: 244 48% 14%;
 
@@ -75,4 +78,8 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+html,body,#root{
+  height: 100vh;
 }
