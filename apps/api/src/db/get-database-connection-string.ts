@@ -27,7 +27,7 @@ if (POSTGRES_DB === undefined) {
 // to prevent Vitest from trying to run this file as a test.
 // eslint-disable-next-line max-len
 // See https://github.com/vitest-dev/vitest/blob/d77f712f480be18407f5c089eee7bcb95bcd0964/packages/vitest/src/node/workspace.ts#L149
-if (import.meta['vitest']) {
+if (import.meta['vitest'] || process.env.NODE_ENV === 'test') {
   POSTGRES_DB = `${POSTGRES_DB}_test`
 }
 

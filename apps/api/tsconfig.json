@@ -12,6 +12,6 @@
       "vitest/importMeta"
     ]
   },
-  "include": ["src", "scripts"],
+  "include": ["src", "scripts", "vitest-setup.ts"],
   "exclude": ["node_modules", "dist"]
 }
