@@ -6,16 +6,13 @@ import { drizzle } from 'drizzle-orm/postgres-js'
 import { migrate } from 'drizzle-orm/postgres-js/migrator'
 import postgres from 'postgres'
 
+import {
+  databaseConnectionString,
+} from '../src/db/get-database-connection-string'
+
 dotenv.config()
 
-const connectionString = 'postgres://' +
-  `${process.env.POSTGRES_USER}:` +
-  `${process.env.POSTGRES_PASSWORD}` +
-  '@0.0.0.0:' +
-  `${process.env.POSTGRES_PORT}/` +
-  `${process.env.POSTGRES_DB}`
-
-const migrationsClient = postgres(connectionString, {
+const migrationsClient = postgres(databaseConnectionString, {
   max: 1,
 })
 
