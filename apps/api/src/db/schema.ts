@@ -76,8 +76,8 @@ export const Sensors = pgTable('Sensors', {
   description: text('description'),
 })
 
-export const Mesures = pgTable('Mesures', {
-  mesureId: serial('mesure_ID').primaryKey(),
+export const Measures = pgTable('Measures', {
+  measureId: serial('measure_ID').primaryKey(),
   sensorId: integer('sensor_ID')
     .references(() => Sensors.sensorId, { onDelete: 'cascade' }),
   value: numeric('value'),
@@ -114,8 +114,8 @@ export const Halls = pgTable('Halls', {
 
 export const Notifications = pgTable('Notifications', {
   notificationId: serial('notification_ID').primaryKey(),
-  measureId: integer('mesure_ID')
-    .references(() => Mesures.mesureId, { onDelete: 'cascade' }),
+  measureId: integer('measure_ID')
+    .references(() => Measures.measureId, { onDelete: 'cascade' }),
   sensorId: integer('sensor_ID')
     .references(() => Sensors.sensorId, { onDelete: 'cascade' }),
   message: text('message'),
