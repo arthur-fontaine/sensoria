@@ -33,6 +33,9 @@ jobs:
         with:
           run_install: true
 
+      - name: Copy .env
+        run: find . -name ".env.ci" -type f -exec sh -c 'cp "$1" "${1%.ci}"' _ {} \;
+
       - name: Lint
         run: pnpm lint
 

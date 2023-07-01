@@ -19,7 +19,6 @@
     "preseed:run": "pnpm start-database",
     "seed:run": "tsx scripts/seed.ts --reset",
     "postseed:run": "pnpm stop-database",
-    "prestart-database": "is-ci && touch .env",
     "start-database": "docker-compose up -d",
     "stop-database": "docker-compose stop"
   },
@@ -36,7 +35,6 @@
   },
   "devDependencies": {
     "@types/node": "^18.11.9",
-    "is-ci": "^3.0.1",
     "tsx": "^3.12.7",
     "vitest": "^0.32.2"
   }
