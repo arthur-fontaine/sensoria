@@ -1,0 +1,17 @@
+// run "pnpm start-database" with exec
+
+import { execSync } from 'node:child_process'
+
+const vitestSetup = async () => {
+  console.log('Starting database...')
+  execSync('pnpm start-database')
+  console.log('Database started')
+  
+  console.log('Running migrations and seeds...')
+  execSync('NODE_ENV=test pnpm seed:run -- --reset')
+  console.log('Migrations and seeds complete')
+}
+
+export {
+  vitestSetup as setup,
+}
