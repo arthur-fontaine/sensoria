@@ -8,6 +8,12 @@ on:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
+env:
+  POSTGRES_USER: root
+  POSTGRES_PASSWORD: root
+  POSTGRES_DB: sensoria_db
+  POSTGRES_PORT: 5432
+
 jobs:
   test:
     name: Test
