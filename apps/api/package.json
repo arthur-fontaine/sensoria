@@ -12,15 +12,19 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "migration:generate": "pnpm drizzle-kit generate:pg --schema=./src/db/schema.ts",
-    "migration:run": "tsx scripts/migrate.ts"
+    "migration:run": "tsx scripts/migrate.ts",
+    "seed:run": "tsx scripts/seed.ts --reset"
   },
   "dependencies": {
     "dotenv": "^16.3.1",
     "drizzle-kit": "^0.19.2",
     "drizzle-orm": "^0.27.0",
+    "drizzle-zod": "^0.4.4",
     "garph": "^0.5.4",
     "graphql-yoga": "^4.0.2",
-    "postgres": "^3.3.5"
+    "postgres": "^3.3.5",
+    "zod": "^3.21.4",
+    "zod-fixture": "^1.10.0"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",
