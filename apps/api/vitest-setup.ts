@@ -2,7 +2,7 @@
 
 import { execSync } from 'node:child_process'
 
-const vitestSetup = async () => {
+export const setup = async () => {
   console.log('Creating test database...')
   execSync('pnpm start-database')
   console.log('Test database created')
@@ -16,6 +16,8 @@ const vitestSetup = async () => {
   console.log('Database started')
 }
 
-export {
-  vitestSetup as setup,
+export const teardown = async () => {
+  console.log('Stopping database...')
+  execSync('pnpm stop-database')
+  console.log('Database stopped')
 }
