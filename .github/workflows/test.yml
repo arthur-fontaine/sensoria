@@ -8,6 +8,12 @@ on:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
+env:
+  POSTGRES_USER: root
+  POSTGRES_PASSWORD: root
+  POSTGRES_DB: sensoria_db
+  POSTGRES_PORT: 5432
+
 jobs:
   test:
     name: Test
@@ -26,6 +32,9 @@ jobs:
         id: pnpm-install
         with:
           run_install: true
+
+      - name: Copy .env
+        run: find . -name ".env.ci" -type f -exec sh -c 'cp "$1" "${1%.ci}"' _ {} \;
 
       - name: Lint
         run: pnpm lint

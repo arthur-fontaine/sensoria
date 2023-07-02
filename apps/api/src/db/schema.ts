@@ -10,7 +10,8 @@ export const impactEnum = pgEnum('impact', [
   'normal',
   'post_high',
 ])
-export const permissionEnum = pgEnum ('permission', [
+
+export const permissionEnum = pgEnum('permission', [
   'view_rooms',
   'manage_rooms',
   'add_rooms',
@@ -75,8 +76,8 @@ export const Sensors = pgTable('Sensors', {
   description: text('description'),
 })
 
-export const Mesures = pgTable('Mesures', {
-  measureId: serial('mesure_ID').primaryKey(),
+export const Measures = pgTable('Measures', {
+  measureId: serial('measure_ID').primaryKey(),
   sensorId: integer('sensor_ID')
     .references(() => Sensors.sensorId, { onDelete: 'cascade' }),
   value: numeric('value'),
@@ -113,8 +114,8 @@ export const Halls = pgTable('Halls', {
 
 export const Notifications = pgTable('Notifications', {
   notificationId: serial('notification_ID').primaryKey(),
-  measureId: integer('mesure_ID')
-    .references(() => Mesures.measureId, { onDelete: 'cascade' }),
+  measureId: integer('measure_ID')
+    .references(() => Measures.measureId, { onDelete: 'cascade' }),
   sensorId: integer('sensor_ID')
     .references(() => Sensors.sensorId, { onDelete: 'cascade' }),
   message: text('message'),
@@ -156,8 +157,8 @@ export const UsersAccess = pgTable('UsersAccess', {
 })
 
 export const Access = pgTable('Access', {
-  accessId: serial('access_ID').primaryKey(),
-  hallId: integer('hall_ID'),
+  accessId: serial('access_ID').notNull().primaryKey(),
+  hallId: integer('hall_ID').notNull(),
 })
 
 export const usersRelations = relations(Access, ({ many }) => ({
