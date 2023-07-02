@@ -1,27 +1,47 @@
 import bcrypt from 'bcryptjs'
+import dotenv from 'dotenv'
 import { eq } from 'drizzle-orm'
+import jwt from 'jsonwebtoken'
 
 import type { Resolvers } from '../..'
 import { database } from '../../db'
 import { Users } from '../../db/schema'
 
+let JWT_SECRET = ''
+
+if (typeof window === 'undefined') {
+  dotenv.config()
+  
+  if (process.env.JWT_SECRET === undefined) {
+    throw new Error('JWT_SECRET is undefined')
+  }
+  
+  JWT_SECRET = process.env.JWT_SECRET
+}
+
 export const modifyPasswordMutationResolver: NonNullable<
   Resolvers['Mutation']['modifyPassword']
 > = async (_parent, args) => {
-  await modifyPassword(args.email, args.password, args.newPassword)
+  await modifyPassword(args.token, args.password, args.newPassword)
   return true
 }
 
 async function modifyPassword(
-  email: string,
+  token: string,
   password: string,
   newPassword: string,
 ) {
-  const userPassword = await database
-    .select({ password: Users.password })
+  const { userEmail: email } = jwt.verify(token, JWT_SECRET) as {
+    userEmail: string
+  }
+
+  const { userPassword } = await database
+    .select({ password: Users.password, id: Users.userId })
     .from(Users)
     .where(eq(Users.email, email))
-    .then(([user]) => user?.password)
+    .then(([user]) => ({
+      userPassword: user?.password,
+    }))
 
   if (userPassword === undefined || userPassword === null ) {
     throw new Error('User not found')

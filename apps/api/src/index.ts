@@ -9,17 +9,17 @@ import { loginQueryResolver } from './resolvers/queries/authentication'
 export const queryType = g.type('Query', {
   authentication: g.string()
     .args({
-      email:g.string(),
-      password:g.string(),
+      email: g.string(),
+      password: g.string(),
     }),
 })
 
 export const mutationType = g.type('Mutation', {
   modifyPassword: g.boolean()
     .args({
-      email:g.string(),
-      password:g.string(),
-      newPassword:g.string(),
+      token: g.string(),
+      password: g.string(),
+      newPassword: g.string(),
     }),
 })
 

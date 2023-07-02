@@ -7,13 +7,17 @@ import type { Resolvers } from '../..'
 import { database } from '../../db'
 import { Users } from '../../db/schema'
 
-dotenv.config()
+let JWT_SECRET = ''
 
-if (process.env.JWT_SECRET === undefined) {
-  throw new Error('JWT_SECRET is undefined')
+if (typeof window === 'undefined') {
+  dotenv.config()
+  
+  if (process.env.JWT_SECRET === undefined) {
+    throw new Error('JWT_SECRET is undefined')
+  }
+  
+  JWT_SECRET = process.env.JWT_SECRET
 }
-
-const JWT_SECRET = process.env.JWT_SECRET
 
 export const loginQueryResolver: NonNullable<
   Resolvers['Query']['authentication']
