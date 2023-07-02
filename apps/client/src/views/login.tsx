@@ -18,6 +18,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import { useQuery } from '@/hooks/use-query'
+import { Router } from '@/router'
 
 const FormSchema = z.object({
   email: z.string()
@@ -36,6 +38,7 @@ const FormSchema = z.object({
 })
 
 export function Login() {
+  const query = useQuery()
   const [showPassword, setShowPassword] = useState(false)
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -46,12 +49,20 @@ export function Login() {
     },
   })
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log({
-      title: 'You submitted the following values:',
-      description: ( data ),
-    })
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    const token = await query.authentication(
+      {email: data.email, password: data.password},
+    )
+    if (token && data.memory == true){
+      localStorage.setItem('Token', token)
+      Router.push('Dashboard')
+      
+    }else if (token && data.memory == false){
+      sessionStorage.setItem('Token', token)
+      Router.push('Dashboard')
+    }
   }
+
   return (
     <div className="flex items-center justify-center 
     place-content-center h-full">
