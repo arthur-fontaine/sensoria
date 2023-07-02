@@ -22,11 +22,14 @@ export const loginQueryResolver: NonNullable<
 }
 
 async function authentication(email: string, password: string) {
-  const userPassword = await database
-    .select({ password: Users.password })
+  const { userPassword, userId } = await database
+    .select({ password: Users.password, id: Users.userId })
     .from(Users)
     .where(eq(Users.email, email))
-    .then(([user]) => user?.password)
+    .then(([user]) => ({
+      userPassword: user?.password,
+      userId: user?.id,
+    }))
 
   if (userPassword === undefined || userPassword === null ) {
     throw new Error('User not found')
@@ -38,7 +41,7 @@ async function authentication(email: string, password: string) {
     throw new Error('Invalid password')
   }
 
-  const token = jwt.sign({ userId: email }, JWT_SECRET)
+  const token = jwt.sign({ userEmail: email, userId }, JWT_SECRET)
 
   return token
 }
