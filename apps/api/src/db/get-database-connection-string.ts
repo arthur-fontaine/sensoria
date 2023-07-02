@@ -2,25 +2,32 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-const POSTGRES_USER = process.env.POSTGRES_USER
-const POSTGRES_PASSWORD = process.env.POSTGRES_PASSWORD
-const POSTGRES_PORT = process.env.POSTGRES_PORT
-let POSTGRES_DB = process.env.POSTGRES_DB
+let POSTGRES_USER = ''
+let POSTGRES_PASSWORD = ''
+let POSTGRES_PORT = ''
+let POSTGRES_DB = ''
 
-if (POSTGRES_USER === undefined) {
-  throw new Error('POSTGRES_USER is not defined')
-}
+if (typeof window === 'undefined') {
+  if (process.env.POSTGRES_USER === undefined) {
+    throw new Error('POSTGRES_USER is not defined')
+  }
 
-if (POSTGRES_PASSWORD === undefined) {
-  throw new Error('POSTGRES_PASSWORD is not defined')
-}
+  if (process.env.POSTGRES_PASSWORD === undefined) {
+    throw new Error('POSTGRES_PASSWORD is not defined')
+  }
 
-if (POSTGRES_PORT === undefined) {
-  throw new Error('POSTGRES_PORT is not defined')
-}
+  if (process.env.POSTGRES_PORT === undefined) {
+    throw new Error('POSTGRES_PORT is not defined')
+  }
 
-if (POSTGRES_DB === undefined) {
-  throw new Error('POSTGRES_DB is not defined')
+  if (process.env.POSTGRES_DB === undefined) {
+    throw new Error('POSTGRES_DB is not defined')
+  }
+
+  POSTGRES_USER = process.env.POSTGRES_USER
+  POSTGRES_PASSWORD = process.env.POSTGRES_PASSWORD
+  POSTGRES_PORT = process.env.POSTGRES_PORT
+  POSTGRES_DB = process.env.POSTGRES_DB
 }
 
 // Have to use "import.meta['vitest']" instead of "import dot meta dot vitest"
