@@ -21,12 +21,8 @@ if (typeof window === 'undefined') {
 
 export const loginQueryResolver: NonNullable<
   Resolvers['Query']['authentication']
-> = async (_parent, args) => {
-  console.log(args)
+> = (_parent, args) => {
   return authentication(args.email, args.password)
-
-  // console.log(test)
-  // return test
 }
 
 async function authentication(email: string, password: string) {
