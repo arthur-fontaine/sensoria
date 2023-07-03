@@ -46,8 +46,7 @@ async function modifyPassword(
   if (userPassword === undefined || userPassword === null ) {
     throw new Error('User not found')
   }
-
-  const validPassword = bcrypt.compare(password, userPassword)
+  const validPassword = await bcrypt.compare(password, userPassword)
 
   if (!validPassword) {
     throw new Error('Invalid password')

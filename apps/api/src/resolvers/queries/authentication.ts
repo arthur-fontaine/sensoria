@@ -21,8 +21,12 @@ if (typeof window === 'undefined') {
 
 export const loginQueryResolver: NonNullable<
   Resolvers['Query']['authentication']
-> = (_parent, args) => {
+> = async (_parent, args) => {
+  console.log(args)
   return authentication(args.email, args.password)
+
+  // console.log(test)
+  // return test
 }
 
 async function authentication(email: string, password: string) {
@@ -38,8 +42,8 @@ async function authentication(email: string, password: string) {
   if (userPassword === undefined || userPassword === null ) {
     throw new Error('User not found')
   }
-
-  const validPassword = bcrypt.compare(password, userPassword)
+  
+  const validPassword = await bcrypt.compare(password, userPassword)
 
   if (!validPassword) {
     throw new Error('Invalid password')
