@@ -12,7 +12,6 @@ import {
   FormField,
   FormItem,
   FormMessage,
-  FormDescription,
 } from '@/components/ui/form'
 
 const FormSchema = z.object({
@@ -22,7 +21,7 @@ const FormSchema = z.object({
   }),
 })
 
-export function Onboarding() {
+export function OnboardingStep2() {
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -41,14 +40,15 @@ export function Onboarding() {
     <div className="container mt-20 mx-10 flex-initial">
       <div className="flex justify-between ">
         <h1 className="font-extrabold text-5xl mb-40">
-          Bienvenue sur l'outil d'assistance à la<br />configuration de Sensoria
+          Configuration de Sensoria
         </h1>
-        <h6 className="ml-auto">1 sur 3</h6>
+        <h6 className="ml-auto">2 sur 3</h6>
       </div>
       <div className="my-8">
-        <h2 className="font-semibold text-3xl">Pour commencer...</h2>
-        <h4 className="font-normal text-xl mb-10">
-          Quel est le nom du bâtiment que vous souhaitez protéger ?
+        <h2 className="font-semibold text-3xl mb-3">Localiser votre batiment</h2>
+        <h4 className="font-normal text-xl mb-12">
+          Entrez l'adresse de votre batiment.<br/>
+          Nous nou en servirons pour récolter des informations personnalisées.
         </h4>
       </div>
       <div className='w-80'>
@@ -60,11 +60,8 @@ export function Onboarding() {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input type="text"placeholder="Nom du bâtiment" {...field} />
+                    <Input type="text"placeholder="Adresse du batiment" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    This is the name that will be displayed on your profile.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
