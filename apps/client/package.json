@@ -11,12 +11,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
+    "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@garph/gqty": "^0.4.5",
     "@gqty/react": "2.1.0",
     "@hookform/resolvers": "^3.1.1",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-toast": "^1.1.4",
     "@sensoria/api": "workspace:*",
     "@swan-io/chicane": "^1.4.0",
     "balance-text": "^3.3.1",
@@ -27,6 +30,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.45.1",
+    "rollup-plugin-node-polyfills": "^0.2.1",
     "tailwind-merge": "^1.13.2",
     "tailwindcss-animate": "^1.0.6",
     "zod": "^3.21.4",
