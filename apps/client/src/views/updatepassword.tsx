@@ -7,8 +7,7 @@ import * as z from 'zod'
 import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
 
-import { Card, CardHeader, CardTitle, 
-} from '@/components/ui/card'
+import { Card, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Form,
   FormControl,
@@ -17,13 +16,16 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import { useMutation } from '@/hooks/use-query'
+import { toast } from '@/hooks/use-toast'
+import { Router } from '@/router'
 
 const FormSchema = z.object({
-  oldpassword: z.string().min(1, {
+  oldPassword: z.string().min(1, {
     message: 'Entrez votre mot de passe actuel',
   }),   
 
-  newpassword: z.string()
+  newPassword: z.string()
     .refine(value => {
       const regexPassword = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[A-Z])[\dA-Za-z]{12,}$/
       return regexPassword.test(value)
@@ -37,12 +39,31 @@ const FormSchema = z.object({
       1, 
       { message: 'La confirmation de mot de passe est nécessaire' },
     ),
-}).refine((data)=> data.newpassword === data.confirmPassword, {
+}).refine((data)=> data.newPassword === data.confirmPassword, {
   path: ['confirmPassword'],
   message:'Les deux nouveaux mots de passes ne sont pas identiques.',
 })
 
 export function Updatepassword() {
+  const [modifyPassword] = useMutation<void, {
+    newPassword: string, 
+    oldPassword: string
+  }>((
+    mutation,
+    { newPassword, oldPassword },
+  ) => {
+    const token = (
+      sessionStorage.getItem('token') ??
+      localStorage.getItem('token')
+    )
+
+    if (token === null) {
+      throw new Error('Cannot find token.')
+    }
+
+    return mutation.modifyPassword({ token, password:oldPassword, newPassword})
+  })
+
   const [showOldPassword, setShowOldPassword] = useState(false)
   const [showNewPassword, setShowNewPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -50,17 +71,29 @@ export function Updatepassword() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      oldpassword: '',
-      newpassword: '',
+      oldPassword: '',
+      newPassword: '',
       confirmPassword: '',
     },
   })
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log({
-      title: 'You submitted the following values:',
-      description: ( data ),
-    })
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    try {
+      const response = await modifyPassword({
+        args: data, 
+      })
+      if (response !== undefined) {
+        Router.push('Dashboard')
+      }
+    } catch (error) {
+      if (error){
+        toast({
+          variant: 'destructive',
+          title: 'Erreur de modification',
+          description:'Votre mot de passe est incorrect',
+        })
+      }
+    }
   }
 
   const togglePasswordVisibility = useCallback((type: string) => {
@@ -98,7 +131,7 @@ export function Updatepassword() {
           
             <FormField
               control={form.control}
-              name="oldpassword"
+              name="oldPassword"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Mot de passse actuel</FormLabel>
@@ -124,7 +157,7 @@ export function Updatepassword() {
             /> 
             <FormField
               control={form.control}
-              name="newpassword"
+              name="newPassword"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Nouveau mot de passe</FormLabel>
