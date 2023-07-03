@@ -19,6 +19,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { useQuery } from '@/hooks/use-query'
+import { toast } from '@/hooks/use-toast'
 import { Router } from '@/router'
 
 const FormSchema = z.object({
@@ -49,23 +50,30 @@ export function Login() {
     },
   })
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
-    const token = await query.authentication(
+  function onSubmit(data: z.infer<typeof FormSchema>) {
+    const token =  query.authentication(
       {email: data.email, password: data.password},
     )
     if (token && data.memory == true){
-      localStorage.setItem('Token', token)
+      localStorage.setItem('token', token)
       Router.push('Dashboard')
+    }else if (token && data.memory == undefined){
+      sessionStorage.setItem('token', token)
+      Router.push('Dashboard')
+    }else {
       
-    }else if (token && data.memory == false){
-      sessionStorage.setItem('Token', token)
-      Router.push('Dashboard')
+      toast({
+        variant: 'destructive',
+        title: 'Erreur de connexion',
+        description:'Votre email ou mot de passe est incorrect',
+      })
     }
   }
 
   return (
     <div className="flex items-center justify-center 
     place-content-center h-full">
+      
       <Card className='p-10 '>
         <CardHeader className='p-0 pb-6'>
           <CardTitle >
