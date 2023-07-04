@@ -27,7 +27,10 @@ const FormSchema = z.object({
 
   newPassword: z.string()
     .refine(value => {
-      const regexPassword = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[A-Z])[\dA-Za-z]{12,}$/
+      const regexPassword = new RegExp(
+        '^(?=.*[A-Za-z])(?=.*\\d)(?=.*[A-Z])' +
+        '(?=.*[!#$%&()*@^])[\\d!#$%&()*@A-Z^a-z]{12,}$',
+      )
       return regexPassword.test(value)
     }, {
       message: 
