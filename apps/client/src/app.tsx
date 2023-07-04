@@ -11,6 +11,7 @@ import { Users } from './views/users'
 import { useRoute } from '@/hooks/use-route'
 
 export function App() {
+
   const route = useRoute([
     'Login',
     'Updatepassword',
@@ -19,6 +20,12 @@ export function App() {
     'Users',
     'Tag',
   ])
+
+  const token = sessionStorage.getItem('token') ?? localStorage.getItem('token')
+  
+  if (!token) {
+    return <Login />
+  }
 
   switch (route?.name) {
     case 'Login': {
