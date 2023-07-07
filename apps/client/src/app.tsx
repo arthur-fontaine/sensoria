@@ -1,13 +1,11 @@
-// import { useQuery } from './hooks/use-query'
 import { Label } from '@radix-ui/react-label'
 
-import { Dashboard } from './views/dashboard'
-import { Login } from './views/login'
-import { Onboarding } from './views/onboarding'
-import { Tag } from './views/tag'
-import { Users } from './views/users'
-
-import { useRoute } from '@/hooks/use-route'
+import { Dashboard } from '@/features/dashboard/views/dashboard'
+import { Login } from '@/features/login/views/login'
+import { Onboarding } from '@/features/onboarding/views/onboarding'
+import { Tag } from '@/features/tag/views/tag'
+import { Users } from '@/features/users/users'
+import { useRoute } from '@/shared/hooks/use-route'
 
 export function App() {
   const route = useRoute([

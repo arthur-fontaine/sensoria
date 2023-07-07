@@ -1,7 +1,6 @@
-import { Button } from '@/components/ui/button'
-import { Layout } from '@/layout'
+import { Button } from '@/shared/components/ui/button'
 
-export function Onboarding3() {
+export function OnboardingStep3() {
   return (
     <>
       <div className="my-8">

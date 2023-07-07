@@ -2,9 +2,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
-import { OnboardingLayout } from './onboarding-layout'
-import { Button } from '../../components/ui/button'
-import { Input } from '../../components/ui/input'
+import { Button } from '../../../../shared/components/ui/button'
+import { Input } from '../../../../shared/components/ui/input'
 
 import {
   Form,
@@ -12,9 +11,7 @@ import {
   FormField,
   FormItem,
   FormMessage,
-  FormDescription,
-} from '@/components/ui/form'
-import { Layout } from '@/layout'
+} from '@/shared/components/ui/form'
 
 const FormSchema = z.object({
   name: z.string().min(1, {
@@ -22,7 +19,7 @@ const FormSchema = z.object({
   }),
 })
 
-export function Onboarding1() {
+export function OnboardingStep1() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {

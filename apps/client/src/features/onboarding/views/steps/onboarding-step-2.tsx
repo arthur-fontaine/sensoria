@@ -3,17 +3,15 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
-import { Button } from '../../components/ui/button'
-import { Input } from '../../components/ui/input'
-
+import { Button } from '@/shared/components/ui/button'
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from '@/components/ui/form'
-import { Layout } from '@/layout'
+} from '@/shared/components/ui/form'
+import { Input } from '@/shared/components/ui/input'
 
 const FormSchema = z.object({
 
@@ -22,7 +20,7 @@ const FormSchema = z.object({
   }),
 })
 
-export function Onboarding2() {
+export function OnboardingStep2() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {

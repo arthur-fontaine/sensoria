@@ -1,9 +1,11 @@
 import type React from 'react'
 
-import { Label } from '@/components/ui/label'
-import { useOnboardingStore } from '@/hooks/use-onboarding-store'
-import { useRoute } from '@/hooks/use-route'
-import { Layout } from '@/layout'
+import {
+  useOnboardingStore,
+} from '@/features/onboarding/hooks/use-onboarding-store'
+import { Label } from '@/shared/components/ui/label'
+import { useRoute } from '@/shared/hooks/use-route'
+import { Layout } from '@/shared/layout'
 
 export function OnboardingLayout({
   children,
