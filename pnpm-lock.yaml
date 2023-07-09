@@ -8,6 +8,9 @@ patchedDependencies:
   '@gqty/react@2.1.0':
     hash: 64mimch36z4bunrcxqx2ige5um
     path: patches/@gqty__react@2.1.0.patch
+  gqty@3.0.0-alpha-e9f8f97b.0:
+    hash: b4guuoru6liawvgyjoeupbelzy
+    path: patches/gqty@3.0.0-alpha-e9f8f97b.0.patch
 
 importers:
 
@@ -118,7 +121,7 @@ importers:
         version: 0.4.5(@babel/core@7.22.5)(react-dom@18.2.0)(react@18.2.0)
       '@gqty/react':
         specifier: 2.1.0
-        version: 2.1.0(patch_hash=64mimch36z4bunrcxqx2ige5um)(gqty@2.3.0)(graphql@16.7.1)(react@18.2.0)
+        version: 2.1.0(patch_hash=64mimch36z4bunrcxqx2ige5um)(gqty@3.0.0-alpha-e9f8f97b.0)(graphql@16.7.1)(react@18.2.0)
       '@hookform/resolvers':
         specifier: ^3.1.1
         version: 3.1.1(react-hook-form@7.45.1)
@@ -147,8 +150,8 @@ importers:
         specifier: ^1.2.1
         version: 1.2.1
       gqty:
-        specifier: ^2.3.0
-        version: 2.3.0(graphql@16.7.1)
+        specifier: ^3.0.0-alpha-4a2eebdf.0
+        version: 3.0.0-alpha-e9f8f97b.0(patch_hash=b4guuoru6liawvgyjoeupbelzy)(graphql@16.7.1)
       lucide-react:
         specifier: ^0.252.0
         version: 0.252.0(react@18.2.0)
@@ -1068,7 +1071,7 @@ packages:
       '@gqty/react': 3.0.0-alpha-4a2eebdf.0(gqty@3.0.0-alpha-e9f8f97b.0)(graphql@16.7.1)(react-dom@18.2.0)(react@18.2.0)
       '@mishushakov/ts-load': 1.0.1
       babel-literal-to-ast: 2.1.0(@babel/core@7.22.5)
-      gqty: 3.0.0-alpha-e9f8f97b.0(graphql@16.7.1)
+      gqty: 3.0.0-alpha-e9f8f97b.0(patch_hash=b4guuoru6liawvgyjoeupbelzy)(graphql@16.7.1)
       graphql: 16.7.1
     transitivePeerDependencies:
       - '@babel/core'
@@ -1080,7 +1083,7 @@ packages:
       - supports-color
     dev: false
 
-  /@gqty/react@2.1.0(patch_hash=64mimch36z4bunrcxqx2ige5um)(gqty@2.3.0)(graphql@16.7.1)(react@18.2.0):
+  /@gqty/react@2.1.0(patch_hash=64mimch36z4bunrcxqx2ige5um)(gqty@3.0.0-alpha-e9f8f97b.0)(graphql@16.7.1)(react@18.2.0):
     resolution: {integrity: sha512-aTQEE2voYBqvgLhOs1VgBczL/EUVnbYHFzY1HKCNONH+MyLW0SClGXUcAPcHYEAgkfUfJlbM8egPd5cY1aJZDg==}
     engines: {node: ^12.20.0 || >=14.13.0}
     peerDependencies:
@@ -1088,7 +1091,7 @@ packages:
       graphql: '*'
       react: '>=16.8'
     dependencies:
-      gqty: 2.3.0(graphql@16.7.1)
+      gqty: 3.0.0-alpha-e9f8f97b.0(patch_hash=b4guuoru6liawvgyjoeupbelzy)(graphql@16.7.1)
       graphql: 16.7.1
       react: 18.2.0
       react-ssr-prepass: 1.5.0(react@18.2.0)
@@ -1112,7 +1115,7 @@ packages:
         optional: true
     dependencies:
       '@react-hookz/web': 23.0.1(react-dom@18.2.0)(react@18.2.0)
-      gqty: 3.0.0-alpha-e9f8f97b.0(graphql@16.7.1)
+      gqty: 3.0.0-alpha-e9f8f97b.0(patch_hash=b4guuoru6liawvgyjoeupbelzy)(graphql@16.7.1)
       graphql: 16.7.1
       multidict: 1.0.6
       p-debounce: 4.0.0
@@ -1123,10 +1126,6 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     transitivePeerDependencies:
       - js-cookie
-    dev: false
-
-  /@gqty/utils@1.0.0:
-    resolution: {integrity: sha512-QJMlzts//d0H5mlekOZgx1a4KsTYXfxmRhhx8g/8mvzdaNVPxhFzCsv3+ljTOzbW3A08qy4jXQPWAMoTefSJDQ==}
     dev: false
 
   /@graphql-tools/executor@1.1.0(graphql@16.7.1):
@@ -3482,20 +3481,7 @@ packages:
       get-intrinsic: 1.2.1
     dev: true
 
-  /gqty@2.3.0(graphql@16.7.1):
-    resolution: {integrity: sha512-2YnbUHMYsWRB/J2Rc8ttVTcIEwLs1v0XC8owc+gCxoGw5k6Xjfp8OgB0EjuPos8xQhgqX8rZ14S48GAFLP+WBA==}
-    engines: {node: ^12.20.0 || >=14.13.0}
-    peerDependencies:
-      graphql: '*'
-    peerDependenciesMeta:
-      graphql:
-        optional: true
-    dependencies:
-      '@gqty/utils': 1.0.0
-      graphql: 16.7.1
-    dev: false
-
-  /gqty@3.0.0-alpha-e9f8f97b.0(graphql@16.7.1):
+  /gqty@3.0.0-alpha-e9f8f97b.0(patch_hash=b4guuoru6liawvgyjoeupbelzy)(graphql@16.7.1):
     resolution: {integrity: sha512-/BVVtwgD5r5ORM/bJFOOUomVDC3Brj5mrMBoUnXDC0FpFTPdjWZIxnERPLq7Y9J8OEix1T/133L4W+ubpfvGPQ==}
     engines: {node: ^12.20.0 || >=14.13.0}
     peerDependencies:
@@ -3522,6 +3508,7 @@ packages:
       p-defer: 3.0.0
       p-lazy: 3.1.0
     dev: false
+    patched: true
 
   /graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
