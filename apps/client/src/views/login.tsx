@@ -18,7 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { useQuery } from '@/hooks/use-query'
+import { resolve } from '@/hooks/use-query'
 import { toast } from '@/hooks/use-toast'
 import { Router } from '@/router'
 
@@ -39,7 +39,6 @@ const FormSchema = z.object({
 })
 
 export function Login() {
-  const query = useQuery()
   const [showPassword, setShowPassword] = useState(false)
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -50,10 +49,12 @@ export function Login() {
     },
   })
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    const token =  query.authentication(
-      {email: data.email, password: data.password},
-    )
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    const token = await resolve(({ query }) => {
+      return query.authentication({
+        email: data.email, password: data.password, 
+      })
+    })
     if (token && data.memory == true){
       localStorage.setItem('token', token)
       Router.push('Dashboard')
@@ -61,7 +62,6 @@ export function Login() {
       sessionStorage.setItem('token', token)
       Router.push('Dashboard')
     }else {
-      
       toast({
         variant: 'destructive',
         title: 'Erreur de connexion',

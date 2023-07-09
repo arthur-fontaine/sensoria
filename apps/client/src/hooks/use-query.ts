@@ -19,7 +19,8 @@ const API_PORT = Number.parseInt(process.env.API_PORT)
 export const  { 
   useQuery, 
   useMutation, 
-  useSubscription, 
+  useSubscription,
+  resolve,
 } =  createClient<ClientTypes>({
   generatedSchema: createGeneratedSchema(schema),
   scalarsEnumsHash: createScalarsEnumsHash(schema),
