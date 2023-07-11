@@ -81,6 +81,10 @@ async function generateMock(
     customizations: [
       getForeignKeyZodFixtureCustomization(foreignKeyNames),
       getIdZodFixtureCustomization(),
+      getIconNameZodFixtureCustomization(),
+      getLocationZodFixtureCustomization(),
+      getMapZodFixtureCustomization(),
+      getConfigZodFixtureCustomization(),
     ],
   })
 
@@ -213,6 +217,62 @@ function getIdZodFixtureCustomization(): Customization {
       const id = idMapping.get(propertName) ?? 0
       idMapping.set(propertName, id + 1)
       return id + 1
+    },
+  }
+}
+
+function getIconNameZodFixtureCustomization(): Customization {
+  return {
+    condition: ({ propertName }) => {
+      return (
+        propertName !== undefined &&
+        normalizeName(propertName) === 'iconname'
+      )
+    },
+    generator() {
+      return 'diamond'
+    },
+  }
+}
+
+function getLocationZodFixtureCustomization(): Customization {
+  return {
+    condition: ({ propertName }) => {
+      return (
+        propertName !== undefined &&
+        normalizeName(propertName) === 'location'
+      )
+    },
+    generator() {
+      return [0, 0]
+    },
+  }
+}
+
+function getMapZodFixtureCustomization(): Customization {
+  return {
+    condition: ({ propertName }) => {
+      return (
+        propertName !== undefined &&
+        normalizeName(propertName) === 'map'
+      )
+    },
+    generator() {
+      return new Blob()
+    },
+  }
+}
+
+function getConfigZodFixtureCustomization(): Customization {
+  return {
+    condition: ({ propertName }) => {
+      return (
+        propertName !== undefined &&
+        normalizeName(propertName) === 'config'
+      )
+    },
+    generator() {
+      return {}
     },
   }
 }
