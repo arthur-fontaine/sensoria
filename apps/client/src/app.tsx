@@ -4,7 +4,7 @@ import { Dashboard } from '@/features/dashboard/views/dashboard'
 import { Login } from '@/features/login/views/login'
 import { Onboarding } from '@/features/onboarding/views/onboarding'
 import { Tag } from '@/features/tag/views/tag'
-import { Users } from '@/features/users/users'
+import { Users } from '@/features/users/views/users'
 import { useRoute } from '@/shared/hooks/use-route'
 
 export function App() {

@@ -5,18 +5,11 @@ import {
   text, numeric, customType, integer, boolean,
 } from 'drizzle-orm/pg-core'
 
-const customBlob = customType<{ data: Blob; driverData: string }>({
+const customBuffer = customType<{
+  data: Buffer; driverData: Buffer; notNull: false; default: false
+}>({
   dataType() {
     return 'bytea'
-  },
-  toDriver(value): string {
-    const buffer = Buffer.from(JSON.stringify(value))
-    const driverData = buffer.toString('base64')
-    return driverData
-  },
-  fromDriver(value): Blob {
-    const buffer = Buffer.from(value)
-    return new Blob([buffer])
   },
 })
 
@@ -63,7 +56,7 @@ export const halls = pgTable('halls', {
   hallId: serial('hall_ID').notNull().primaryKey(),
 
   label: varchar('label').notNull(),
-  map: customBlob('map').notNull(),
+  map: customBuffer('map').notNull(),
 
   blockId: integer('block_ID').notNull()
     .references(() => blocks.blockId, { onDelete: 'cascade' }),

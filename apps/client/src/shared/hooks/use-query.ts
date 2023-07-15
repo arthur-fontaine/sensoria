@@ -3,9 +3,12 @@ import {
   createGeneratedSchema,
   createScalarsEnumsHash,
 } from '@garph/gqty/dist/utils'
-import { type queryType, schema } from '@sensoria/api'
+import { type mutationType, type queryType, schema } from '@sensoria/api'
 
-type ClientTypes = InferClient<{ query: typeof queryType }>
+type ClientTypes = InferClient<{
+  query: typeof queryType
+  mutation: typeof mutationType
+}>
 
 if (process.env.API_PORT == undefined) {
   throw new Error('API_PORT is not defined')
@@ -13,7 +16,7 @@ if (process.env.API_PORT == undefined) {
 
 const API_PORT = Number.parseInt(process.env.API_PORT)
 
-export const { useQuery } = createClient<ClientTypes>({
+export const { useMutation, useQuery } = createClient<ClientTypes>({
   generatedSchema: createGeneratedSchema(schema),
   scalarsEnumsHash: createScalarsEnumsHash(schema),
   url: `http://localhost:${API_PORT}/graphql`,

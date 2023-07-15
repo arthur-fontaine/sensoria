@@ -2,7 +2,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import {
-  PgTable, ForeignKey, AnyPgColumn, PgNumeric, AnyPgTable,
+  PgTable, ForeignKey, AnyPgColumn, PgNumeric, AnyPgTable, PgSerial,
 } from 'drizzle-orm/pg-core'
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 import { createInsertSchema } from 'drizzle-zod'
@@ -66,11 +66,14 @@ async function resetDatabase() {
 }
 
 async function generateMock(
-  database: PostgresJsDatabase,
+  database: PostgresJsDatabase<typeof schemas>,
   schema: AnyPgTable,
 ) {
   const foreignKeyNames = await getForeignKeyNames(database, schema)
   const columns = getColumns(schema)
+  const primaryColumns = Object.fromEntries(
+    Object.entries(columns).filter(([, column]) => column instanceof PgSerial),
+  )
 
   const schemaGeneratorRefinements = Object.fromEntries(
     getSchemaGeneratorRefinementEntries(columns),
@@ -88,13 +91,29 @@ async function generateMock(
     ],
   })
 
-  await database.insert(schema).values(mock)
+  const cleanedMock = Object.fromEntries(
+    Object.entries(mock).filter(([key]) => !(key in primaryColumns)),
+  )
 
-  return mock
+  const [values] = await database.insert(schema).values(cleanedMock).returning()
+
+  if (values) {
+    for (const [key, value] of Object.entries(values)) {
+      if (typeof value !== 'number') {
+        continue
+      }
+
+      if (key in primaryColumns) {
+        idMapping.set(normalizeName(key), value)
+      }
+    }
+  }
+
+  return values
 }
 
 async function getForeignKeyNames(
-  database: PostgresJsDatabase,
+  database: PostgresJsDatabase<typeof schemas>,
   schema: AnyPgTable,
 ): Promise<string[]> {
   const foreignKeyNames = <string[]>[]
@@ -118,6 +137,10 @@ async function getForeignKeyNames(
     for (const column of reference.foreignColumns) {
       foreignKeyNames.push(column.name)
 
+      if (mock === undefined) {
+        continue
+      }
+
       const foreignEntry = Object.entries(mock).find(([key]) =>
         normalizeName(key) === normalizeName(column.name))
 
@@ -131,8 +154,6 @@ async function getForeignKeyNames(
       if (typeof foreignKeyValue !== 'number') {
         throw new TypeError('Does not support non-number primary keys')
       }
-
-      idMapping.set(normalizeName(foreignKeyName), foreignKeyValue)
     }
   }
 
@@ -195,7 +216,6 @@ function getForeignKeyZodFixtureCustomization(
         throw new Error(`id for ${propertName} is undefined`)
       }
 
-      idMapping.set(propertName, id)
       return id
     },
   }
@@ -214,9 +234,8 @@ function getIdZodFixtureCustomization(): Customization {
         throw new Error('propertName is undefined')
       }
 
-      const id = idMapping.get(propertName) ?? 0
-      idMapping.set(propertName, id + 1)
-      return id + 1
+      const id = idMapping.get(propertName) ?? 1
+      return id
     },
   }
 }
@@ -258,7 +277,7 @@ function getMapZodFixtureCustomization(): Customization {
       )
     },
     generator() {
-      return new Blob()
+      return Buffer.from('')
     },
   }
 }

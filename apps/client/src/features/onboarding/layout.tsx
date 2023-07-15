@@ -2,7 +2,7 @@ import type React from 'react'
 
 import {
   useOnboardingStore,
-} from '@/features/onboarding/hooks/use-onboarding-store'
+} from '@/features/onboarding/hooks/stores/use-onboarding-store'
 import { Label } from '@/shared/components/ui/label'
 import { useRoute } from '@/shared/hooks/use-route'
 import { Layout } from '@/shared/layout'
@@ -15,11 +15,11 @@ export function OnboardingLayout({
   const route = useRoute(['Onboarding'])
 
   const currentStep = route?.params.step
-  const totalSteps = useOnboardingStore(state => state.steps.length)
+  const totalSteps = useOnboardingStore(state => state.steps.length + 1)
 
   return <Layout>
     <div className='flex-1 flex flex-col'>
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center mb-8">
         <div className="h-[3rem]">
           {/* Put the H1 in a div that is 1 line high, so that the header's
               elements are centered vertically. */}

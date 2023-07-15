@@ -3,6 +3,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
+import { useOnboardingStore } from '../../hooks/stores/use-onboarding-store'
+
 import { Button } from '@/shared/components/ui/button'
 import {
   Form,
@@ -12,10 +14,10 @@ import {
   FormMessage,
 } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
+import { Router } from '@/shared/router'
 
 const FormSchema = z.object({
-
-  name: z.string().min(1, {
+  location: z.string().min(1, {
     message: 'Need name',
   }),
 })
@@ -24,20 +26,20 @@ export function OnboardingStep2() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      name: '',
+      location: '',
     },
   })
 
+  const setStep = useOnboardingStore((state) => state.setStep)
+
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log({
-      title: 'You submitted the following values:',
-      description: (data),
-    })
+    setStep(1, data)
+    Router.replace('Onboarding', { step: '3' })
   }
 
   return (
-    <>
-      <div className="my-12">
+    <div className='space-y-12'>
+      <div>
         <h2 className="font-semibold text-3xl mb-3">Localiser votre batiment</h2>
         <h4 className="font-normal text-xl">
           Entrez l'adresse de votre batiment.<br />
@@ -49,7 +51,7 @@ export function OnboardingStep2() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="name"
+              name="location"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -63,6 +65,6 @@ export function OnboardingStep2() {
           </form>
         </Form>
       </div>
-    </>
+    </div>
   )
 }
