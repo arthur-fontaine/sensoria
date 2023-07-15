@@ -112,7 +112,7 @@ function HallCreateMapConfigureDevices() {
         à l’endroit où il se situe. Cliquez sur un capteur déjà placé
         pour le configurer.
       </p>
-      <div className='bg-white flex justify-center items-center flex-1'>
+      <div className='flex justify-center items-center flex-1 overflow-hidden'>
         <div
           style={{ backgroundImage: `url(${mapImageUrl})` }}
           className='bg-center bg-no-repeat bg-contain overflow-hidden

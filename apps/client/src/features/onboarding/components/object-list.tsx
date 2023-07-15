@@ -5,6 +5,7 @@ import { useStagesStore } from '../hooks/stores/use-stages-store'
 import { useDraggable } from '../hooks/use-draggable'
 
 import { cn } from '@/lib/utils'
+import { Separator } from '@/shared/components/ui/separator'
 import { useQuery } from '@/shared/hooks/use-query'
 
 interface ObjectListProperties {
@@ -33,23 +34,69 @@ export function ObjectList({ imageZone }: ObjectListProperties) {
     })
   }, [remoteObjects, localObjects])
 
-  return <div className="bg-card text-card-foreground
-                         rounded-lg p-6 overflow-auto">
-    <h3>Objets disponibles</h3>
-    <div className="mt-4 space-y-4 w-[20ch]">
-      {objects.map((object) => {
-        if (object.objectId === undefined) {
-          return
-        }
+  const sensors = useMemo(() => {
+    return objects.filter((object) => true)
+  }, [objects])
 
-        return object.isAvailable && (
-          <ObjectListItem
-            key={object.objectId}
-            imageZone={imageZone}
-            object={object}
-          />
+  const actions = useMemo(() => {
+    return objects.filter((object) => false)
+  }, [objects])
+
+  return <div className="bg-card text-card-foreground
+                         rounded-lg p-6 overflow-auto
+                         scrollbar scrollbar-thumb-card-foreground
+                         scrollbar-w-1 scrollbar-thumb-rounded-lg
+                         scrollbar-track-transparent">
+    <h3 className='text-lg font-semibold leading-7'>
+      Objets disponibles
+    </h3>
+    <div className="mt-4 space-y-4 w-[20ch]">
+      {
+        actions.length > 0 && (
+          <>
+            <h4 className="text-muted text-xs font-medium leading-tight">
+              Actionneurs
+            </h4>
+            {actions.map((action) => {
+              if (action.objectId === undefined) {
+                return
+              }
+
+              return action.isAvailable && (
+                <ObjectListItem
+                  key={action.objectId}
+                  imageZone={imageZone}
+                  object={action}
+                />
+              )
+            })}
+            <Separator />
+          </>
         )
-      })}
+      }
+      {
+        sensors.length > 0 && (
+          <>
+            <h4 className="text-muted-foreground text-xs
+                          font-medium leading-tight">
+              Capteurs
+            </h4>
+            {sensors.map((sensor) => {
+              if (sensor.objectId === undefined) {
+                return
+              }
+
+              return sensor.isAvailable && (
+                <ObjectListItem
+                  key={sensor.objectId}
+                  imageZone={imageZone}
+                  object={sensor}
+                />
+              )
+            })}
+          </>
+        )
+      }
     </div>
   </div>
 }
@@ -140,7 +187,10 @@ function ObjectListItem({ imageZone, object }: ObjectListItemProperties) {
         disabled && 'cursor-not-allowed pointer-events-none',
       )}
     />
-    <span className="w-full truncate" title={object.name}>
+    <span
+      className="w-full truncate text-sm font-medium leading-normal"
+      title={object.name}
+    >
       {object.name}
     </span>
   </div>

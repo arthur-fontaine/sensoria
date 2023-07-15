@@ -21,14 +21,15 @@ export function OnboardingLayout({
     <div className='flex-1 flex flex-col'>
       <div className="flex justify-between items-center mb-8">
         <div className="h-[3rem]">
-          {/* Put the H1 in a div that is 1 line high, so that the header's
-              elements are centered vertically. */}
-          <h1 className="font-extrabold text-5xl balance-text">
+          <h1 className="font-extrabold text-5xl
+                         balance-text whitespace-pre-line">
             {
               currentStep === '1'
                 ? ('Bienvenue sur l\'outil d\'assistance '
                   + 'à la configuration de Sensoria')
-                : 'Configuration de Sensoria'
+                : (currentStep === totalSteps.toString()
+                  ? 'Félicitations !\nSensoria est configuré !'
+                  : 'Configuration de Sensoria')
             }
           </h1>
         </div>
