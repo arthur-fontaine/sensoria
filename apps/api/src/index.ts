@@ -17,7 +17,10 @@ export const queryType = g.type('Query', {
       password: g.string(),
     }),
   objects: g.ref(() => objectType).list()
-    .description('Get all objects'),
+    .args({
+      id: g.int().optional().description('The id of the object'),
+    })
+    .description('Get an objects by id'),
 })
 
 export const mutationType = g.type('Mutation', {
