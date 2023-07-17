@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 
 import { App } from './app.tsx'
+import { Toaster } from './shared/components/ui/toaster.tsx'
 import './globals.css'
 
 if (!CSS.supports('text-wrap', 'balance')) {
@@ -14,5 +15,6 @@ if (!CSS.supports('text-wrap', 'balance')) {
 ReactDOM.createRoot(document.querySelector('#root') as HTMLElement).render(
   <React.StrictMode>
     <App />
+    <Toaster/>
   </React.StrictMode>,
 )

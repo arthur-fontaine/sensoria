@@ -2,12 +2,17 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-const POSTGRES_USER = process.env.POSTGRES_USER
-const POSTGRES_PASSWORD = process.env.POSTGRES_PASSWORD
-const POSTGRES_PORT = process.env.POSTGRES_PORT
-let POSTGRES_DB = process.env.POSTGRES_DB
+let POSTGRES_USER: string | undefined = ''
+let POSTGRES_PASSWORD: string | undefined = ''
+let POSTGRES_PORT: string | undefined = ''
+let POSTGRES_DB: string | undefined = ''
 
 if (typeof window === 'undefined') {
+  POSTGRES_USER = process.env.POSTGRES_USER
+  POSTGRES_PASSWORD = process.env.POSTGRES_PASSWORD
+  POSTGRES_PORT = process.env.POSTGRES_PORT
+  POSTGRES_DB = process.env.POSTGRES_DB
+
   if (POSTGRES_USER === undefined) {
     throw new Error('POSTGRES_USER is not defined')
   }

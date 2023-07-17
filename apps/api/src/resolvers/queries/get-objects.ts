@@ -1,4 +1,4 @@
-import { SQL, isNull, not, or } from 'drizzle-orm'
+import { SQL, isNull, or } from 'drizzle-orm'
 
 import type { Resolvers } from '../..'
 import { database } from '../../db'

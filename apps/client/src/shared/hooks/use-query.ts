@@ -16,7 +16,7 @@ if (process.env.API_PORT == undefined) {
 
 const API_PORT = Number.parseInt(process.env.API_PORT)
 
-export const { useMutation, useQuery } = createClient<ClientTypes>({
+export const { useMutation, useQuery, resolve } = createClient<ClientTypes>({
   generatedSchema: createGeneratedSchema(schema),
   scalarsEnumsHash: createScalarsEnumsHash(schema),
   url: `http://localhost:${API_PORT}/graphql`,

@@ -13,6 +13,7 @@ import {
 } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
 import { useMutation } from '@/shared/hooks/use-query'
+import { Router } from '@/shared/router'
 
 type CreateBlockArguments = NonNullable<Parameters<Parameters<
   NonNullable<Parameters<typeof useMutation>[0]>
@@ -102,7 +103,7 @@ export function OnboardingSubmit() {
         },
       })
 
-      // TODO: Redirect to the auth page
+      Router.push('Login')
     },
     [submitBlock, stepsValues, stages],
   )

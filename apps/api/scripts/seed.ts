@@ -1,6 +1,7 @@
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+import bcrypt from 'bcryptjs'
 import {
   PgTable, ForeignKey, AnyPgColumn, PgNumeric, AnyPgTable, PgSerial,
 } from 'drizzle-orm/pg-core'
@@ -19,6 +20,8 @@ import * as schemas from '../src/db/schema'
 const originalNameSymbol = Symbol.for('drizzle:OriginalName')
 const inlineForeignKeysSymbol = Symbol.for('drizzle:PgInlineForeignKeys')
 const columnsSymbol = Symbol.for('drizzle:Columns')
+
+const USER_PASSWORD = 'password'
 
 // idMapping is used to keep track of the ids that are generated for foreign
 // keys. This is needed because the foreign keys are generated in a separate
@@ -69,6 +72,7 @@ async function generateMock(
   database: PostgresJsDatabase<typeof schemas>,
   schema: AnyPgTable,
 ) {
+  const name = getOriginalName(schema)
   const foreignKeyNames = await getForeignKeyNames(database, schema)
   const columns = getColumns(schema)
   const primaryColumns = Object.fromEntries(
@@ -84,6 +88,8 @@ async function generateMock(
     customizations: [
       getForeignKeyZodFixtureCustomization(foreignKeyNames),
       getIdZodFixtureCustomization(),
+      getPasswordZodFixtureCustomization(),
+      getEmailZodFixtureCustomization(),
       getIconNameZodFixtureCustomization(),
       getLocationZodFixtureCustomization(),
       getMapZodFixtureCustomization(),
@@ -106,6 +112,16 @@ async function generateMock(
       if (key in primaryColumns) {
         idMapping.set(normalizeName(key), value)
       }
+    }
+
+    if (name === 'Users') {
+      console.log(
+        'Created user (' +
+        `id=${values.userId}, ` +
+        `name=${values.name}, ` +
+        `email=${values.email}, ` +
+        `password=${USER_PASSWORD})`,
+      )
     }
   }
 
@@ -292,6 +308,35 @@ function getConfigZodFixtureCustomization(): Customization {
     },
     generator() {
       return {}
+    },
+  }
+}
+
+function getPasswordZodFixtureCustomization(): Customization {
+  return {
+    condition: ({ propertName }) => {
+      return (
+        propertName !== undefined &&
+        normalizeName(propertName) === 'password'
+      )
+    },
+    generator() {
+      return bcrypt.hashSync(USER_PASSWORD, 10)
+    },
+  }
+}
+
+function getEmailZodFixtureCustomization(): Customization {
+  return {
+    condition: ({ propertName }) => {
+      return (
+        propertName !== undefined &&
+        normalizeName(propertName) === 'email'
+      )
+    },
+    generator() {
+      const randomString = Math.random().toString(36).slice(7)
+      return `${randomString}@email.com`
     },
   }
 }
