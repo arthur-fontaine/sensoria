@@ -7,8 +7,8 @@
     --background: 0 0% 100%;
     --foreground: 244 48% 14%;
 
-    --muted: 232 100% 95%;
-    --muted-foreground: 232 59% 55%;
+    --muted: 232 100% 97%;
+    --muted-foreground: 232 59% 77%;
 
     --popover: 0 0% 100%;
     --popover-foreground: 244 48% 14%;
@@ -16,7 +16,7 @@
     --border: 233 100% 91%;
     --input: 233 100% 91%;
 
-    --card: 0 0% 100%;
+    --card: 232 100% 95%;
     --card-foreground: 244 48% 14%;
 
     --primary: 243 48% 26%;
@@ -67,12 +67,31 @@
     --ring: 240 56% 30%;
   }
 }
- 
+
+@layer utilities {
+  .balance-text {
+    text-wrap: balance;
+  }
+
+  @variants responsive {
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .no-scrollbar {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground overflow-hidden;
   }
 }

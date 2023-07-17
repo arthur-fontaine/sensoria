@@ -1,126 +1,11 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "8aa8ee94-260e-4fdb-8c1a-43d2b620a146",
+  "id": "66aa722b-60c8-4616-a06d-54dc875af175",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "Access": {
-      "name": "Access",
-      "schema": "",
-      "columns": {
-        "access_ID": {
-          "name": "access_ID",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "hall_ID": {
-          "name": "hall_ID",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {}
-    },
-    "Actions": {
-      "name": "Actions",
-      "schema": "",
-      "columns": {
-        "action_ID": {
-          "name": "action_ID",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "sensor_ID": {
-          "name": "sensor_ID",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "timestamp": {
-          "name": "timestamp",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "Actions_sensor_ID_Sensors_sensor_ID_fk": {
-          "name": "Actions_sensor_ID_Sensors_sensor_ID_fk",
-          "tableFrom": "Actions",
-          "tableTo": "Sensors",
-          "columnsFrom": [
-            "sensor_ID"
-          ],
-          "columnsTo": [
-            "sensor_ID"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {}
-    },
-    "Alarms": {
-      "name": "Alarms",
-      "schema": "",
-      "columns": {
-        "alert_ID": {
-          "name": "alert_ID",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "sensor_ID": {
-          "name": "sensor_ID",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "impact": {
-          "name": "impact",
-          "type": "impact",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "timestamp": {
-          "name": "timestamp",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "Alarms_sensor_ID_Sensors_sensor_ID_fk": {
-          "name": "Alarms_sensor_ID_Sensors_sensor_ID_fk",
-          "tableFrom": "Alarms",
-          "tableTo": "Sensors",
-          "columnsFrom": [
-            "sensor_ID"
-          ],
-          "columnsTo": [
-            "sensor_ID"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {}
-    },
-    "Blocks": {
-      "name": "Blocks",
+    "blocks": {
+      "name": "blocks",
       "schema": "",
       "columns": {
         "block_ID": {
@@ -133,21 +18,21 @@
           "name": "name",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "location": {
           "name": "location",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {}
     },
-    "Halls": {
-      "name": "Halls",
+    "halls": {
+      "name": "halls",
       "schema": "",
       "columns": {
         "hall_ID": {
@@ -156,68 +41,36 @@
           "primaryKey": true,
           "notNull": true
         },
-        "sensor_ID": {
-          "name": "sensor_ID",
-          "type": "integer",
+        "label": {
+          "name": "label",
+          "type": "varchar",
           "primaryKey": false,
-          "notNull": false
-        },
-        "block_ID": {
-          "name": "block_ID",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "hall_tag_ID": {
-          "name": "hall_tag_ID",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "map": {
           "name": "map",
           "type": "bytea",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
+        },
+        "block_ID": {
+          "name": "block_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "Halls_sensor_ID_Sensors_sensor_ID_fk": {
-          "name": "Halls_sensor_ID_Sensors_sensor_ID_fk",
-          "tableFrom": "Halls",
-          "tableTo": "Sensors",
-          "columnsFrom": [
-            "sensor_ID"
-          ],
-          "columnsTo": [
-            "sensor_ID"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "Halls_block_ID_Blocks_block_ID_fk": {
-          "name": "Halls_block_ID_Blocks_block_ID_fk",
-          "tableFrom": "Halls",
-          "tableTo": "Blocks",
+        "halls_block_ID_blocks_block_ID_fk": {
+          "name": "halls_block_ID_blocks_block_ID_fk",
+          "tableFrom": "halls",
+          "tableTo": "blocks",
           "columnsFrom": [
             "block_ID"
           ],
           "columnsTo": [
             "block_ID"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "Halls_hall_tag_ID_Tags_tag_ID_fk": {
-          "name": "Halls_hall_tag_ID_Tags_tag_ID_fk",
-          "tableFrom": "Halls",
-          "tableTo": "Tags",
-          "columnsFrom": [
-            "hall_tag_ID"
-          ],
-          "columnsTo": [
-            "tag_ID"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
@@ -225,8 +78,8 @@
       },
       "compositePrimaryKeys": {}
     },
-    "Invitations": {
-      "name": "Invitations",
+    "invitations": {
+      "name": "invitations",
       "schema": "",
       "columns": {
         "invitation_ID": {
@@ -235,69 +88,75 @@
           "primaryKey": true,
           "notNull": true
         },
-        "user_ID": {
-          "name": "user_ID",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
         "email": {
           "name": "email",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "maximum_date": {
           "name": "maximum_date",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
+        },
+        "user_ID": {
+          "name": "user_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {}
     },
-    "Mesures": {
-      "name": "Mesures",
+    "measures": {
+      "name": "measures",
       "schema": "",
       "columns": {
-        "mesure_ID": {
-          "name": "mesure_ID",
+        "measure_ID": {
+          "name": "measure_ID",
           "type": "serial",
           "primaryKey": true,
+          "notNull": true
+        },
+        "measure_type": {
+          "name": "measure_type",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "timestamp",
+          "primaryKey": false,
           "notNull": true
         },
         "sensor_ID": {
           "name": "sensor_ID",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
-        },
-        "value": {
-          "name": "value",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "timestamp": {
-          "name": "timestamp",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "Mesures_sensor_ID_Sensors_sensor_ID_fk": {
-          "name": "Mesures_sensor_ID_Sensors_sensor_ID_fk",
-          "tableFrom": "Mesures",
-          "tableTo": "Sensors",
+        "measures_sensor_ID_objects_object_ID_fk": {
+          "name": "measures_sensor_ID_objects_object_ID_fk",
+          "tableFrom": "measures",
+          "tableTo": "objects",
           "columnsFrom": [
             "sensor_ID"
           ],
           "columnsTo": [
-            "sensor_ID"
+            "object_ID"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
@@ -305,8 +164,8 @@
       },
       "compositePrimaryKeys": {}
     },
-    "Notifications": {
-      "name": "Notifications",
+    "notifications": {
+      "name": "notifications",
       "schema": "",
       "columns": {
         "notification_ID": {
@@ -315,55 +174,218 @@
           "primaryKey": true,
           "notNull": true
         },
-        "mesure_ID": {
-          "name": "mesure_ID",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "sensor_ID": {
-          "name": "sensor_ID",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
         "message": {
           "name": "message",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "timestamp": {
           "name": "timestamp",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
+        },
+        "importance": {
+          "name": "importance",
+          "type": "importance",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "measure_ID": {
+          "name": "measure_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "Notifications_mesure_ID_Mesures_mesure_ID_fk": {
-          "name": "Notifications_mesure_ID_Mesures_mesure_ID_fk",
-          "tableFrom": "Notifications",
-          "tableTo": "Mesures",
+        "notifications_measure_ID_measures_measure_ID_fk": {
+          "name": "notifications_measure_ID_measures_measure_ID_fk",
+          "tableFrom": "notifications",
+          "tableTo": "measures",
           "columnsFrom": [
-            "mesure_ID"
+            "measure_ID"
           ],
           "columnsTo": [
-            "mesure_ID"
+            "measure_ID"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {}
+    },
+    "objectConfigs": {
+      "name": "objectConfigs",
+      "schema": "",
+      "columns": {
+        "object_config_ID": {
+          "name": "object_config_ID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "config": {
+          "name": "config",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {}
+    },
+    "objectTypes": {
+      "name": "objectTypes",
+      "schema": "",
+      "columns": {
+        "object_type_ID": {
+          "name": "object_type_ID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {}
+    },
+    "objects": {
+      "name": "objects",
+      "schema": "",
+      "columns": {
+        "object_ID": {
+          "name": "object_ID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "icon_name": {
+          "name": "icon_name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "maker": {
+          "name": "maker",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "serial_number": {
+          "name": "serial_number",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "installation_date": {
+          "name": "installation_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "emplacement": {
+          "name": "emplacement",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hall_ID": {
+          "name": "hall_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "object_type_ID": {
+          "name": "object_type_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "block_ID": {
+          "name": "block_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "object_config_ID": {
+          "name": "object_config_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "objects_hall_ID_halls_hall_ID_fk": {
+          "name": "objects_hall_ID_halls_hall_ID_fk",
+          "tableFrom": "objects",
+          "tableTo": "halls",
+          "columnsFrom": [
+            "hall_ID"
+          ],
+          "columnsTo": [
+            "hall_ID"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "objects_object_type_ID_objectTypes_object_type_ID_fk": {
+          "name": "objects_object_type_ID_objectTypes_object_type_ID_fk",
+          "tableFrom": "objects",
+          "tableTo": "objectTypes",
+          "columnsFrom": [
+            "object_type_ID"
+          ],
+          "columnsTo": [
+            "object_type_ID"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "Notifications_sensor_ID_Sensors_sensor_ID_fk": {
-          "name": "Notifications_sensor_ID_Sensors_sensor_ID_fk",
-          "tableFrom": "Notifications",
-          "tableTo": "Sensors",
+        "objects_block_ID_blocks_block_ID_fk": {
+          "name": "objects_block_ID_blocks_block_ID_fk",
+          "tableFrom": "objects",
+          "tableTo": "blocks",
           "columnsFrom": [
-            "sensor_ID"
+            "block_ID"
           ],
           "columnsTo": [
-            "sensor_ID"
+            "block_ID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "objects_object_config_ID_objectConfigs_object_config_ID_fk": {
+          "name": "objects_object_config_ID_objectConfigs_object_config_ID_fk",
+          "tableFrom": "objects",
+          "tableTo": "objectConfigs",
+          "columnsFrom": [
+            "object_config_ID"
+          ],
+          "columnsTo": [
+            "object_config_ID"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
@@ -371,8 +393,64 @@
       },
       "compositePrimaryKeys": {}
     },
-    "OnboardingRating": {
-      "name": "OnboardingRating",
+    "objectsToTags": {
+      "name": "objectsToTags",
+      "schema": "",
+      "columns": {
+        "object_ID": {
+          "name": "object_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tag_ID": {
+          "name": "tag_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "objectsToTags_object_ID_objects_object_ID_fk": {
+          "name": "objectsToTags_object_ID_objects_object_ID_fk",
+          "tableFrom": "objectsToTags",
+          "tableTo": "objects",
+          "columnsFrom": [
+            "object_ID"
+          ],
+          "columnsTo": [
+            "object_ID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "objectsToTags_tag_ID_tags_tag_ID_fk": {
+          "name": "objectsToTags_tag_ID_tags_tag_ID_fk",
+          "tableFrom": "objectsToTags",
+          "tableTo": "tags",
+          "columnsFrom": [
+            "tag_ID"
+          ],
+          "columnsTo": [
+            "tag_ID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "objectsToTags_object_ID_tag_ID": {
+          "name": "objectsToTags_object_ID_tag_ID",
+          "columns": [
+            "object_ID",
+            "tag_ID"
+          ]
+        }
+      }
+    },
+    "onboardingRating": {
+      "name": "onboardingRating",
       "schema": "",
       "columns": {
         "onboarding_rating_id": {
@@ -385,21 +463,41 @@
           "name": "rate",
           "type": "numeric",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "note": {
-          "name": "note",
-          "type": "text",
+        "comment": {
+          "name": "comment",
+          "type": "varchar",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
+        },
+        "user_ID": {
+          "name": "user_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "onboardingRating_user_ID_users_user_ID_fk": {
+          "name": "onboardingRating_user_ID_users_user_ID_fk",
+          "tableFrom": "onboardingRating",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_ID"
+          ],
+          "columnsTo": [
+            "user_ID"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {}
     },
-    "Roles": {
-      "name": "Roles",
+    "roles": {
+      "name": "roles",
       "schema": "",
       "columns": {
         "role_ID": {
@@ -407,18 +505,25 @@
           "type": "serial",
           "primaryKey": true,
           "notNull": true
+        },
+        "permissions": {
+          "name": "permissions",
+          "type": "permission[]",
+          "primaryKey": false,
+          "notNull": true,
+          "default": []
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {}
     },
-    "RolesAccess": {
-      "name": "RolesAccess",
+    "rolesToAccesses": {
+      "name": "rolesToAccesses",
       "schema": "",
       "columns": {
-        "access_ID": {
-          "name": "access_ID",
+        "role_access_ID": {
+          "name": "role_access_ID",
           "type": "serial",
           "primaryKey": true,
           "notNull": true
@@ -427,15 +532,27 @@
           "name": "role_ID",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
+        },
+        "have_access": {
+          "name": "have_access",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hall_ID": {
+          "name": "hall_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "RolesAccess_role_ID_Roles_role_ID_fk": {
-          "name": "RolesAccess_role_ID_Roles_role_ID_fk",
-          "tableFrom": "RolesAccess",
-          "tableTo": "Roles",
+        "rolesToAccesses_role_ID_roles_role_ID_fk": {
+          "name": "rolesToAccesses_role_ID_roles_role_ID_fk",
+          "tableFrom": "rolesToAccesses",
+          "tableTo": "roles",
           "columnsFrom": [
             "role_ID"
           ],
@@ -444,115 +561,84 @@
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
+        },
+        "rolesToAccesses_hall_ID_halls_hall_ID_fk": {
+          "name": "rolesToAccesses_hall_ID_halls_hall_ID_fk",
+          "tableFrom": "rolesToAccesses",
+          "tableTo": "halls",
+          "columnsFrom": [
+            "hall_ID"
+          ],
+          "columnsTo": [
+            "hall_ID"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {}
     },
-    "SensorConfig": {
-      "name": "SensorConfig",
+    "tagConfigs": {
+      "name": "tagConfigs",
       "schema": "",
       "columns": {
-        "sensor_config_ID": {
-          "name": "sensor_config_ID",
+        "tag_config_ID": {
+          "name": "tag_config_ID",
           "type": "serial",
           "primaryKey": true,
           "notNull": true
         },
-        "config": {
-          "name": "config",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {}
-    },
-    "Sensors": {
-      "name": "Sensors",
-      "schema": "",
-      "columns": {
-        "sensor_ID": {
-          "name": "sensor_ID",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "sensor_config_ID": {
-          "name": "sensor_config_ID",
+        "object_type_ID": {
+          "name": "object_type_ID",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
+        },
+        "object_config_ID": {
+          "name": "object_config_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
         },
         "tag_ID": {
           "name": "tag_ID",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
-        },
-        "maker": {
-          "name": "maker",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "serial_number": {
-          "name": "serial_number",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "emplacement": {
-          "name": "emplacement",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "installation_date": {
-          "name": "installation_date",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "status": {
-          "name": "status",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "Sensors_sensor_config_ID_SensorConfig_sensor_config_ID_fk": {
-          "name": "Sensors_sensor_config_ID_SensorConfig_sensor_config_ID_fk",
-          "tableFrom": "Sensors",
-          "tableTo": "SensorConfig",
+        "tagConfigs_object_type_ID_objectTypes_object_type_ID_fk": {
+          "name": "tagConfigs_object_type_ID_objectTypes_object_type_ID_fk",
+          "tableFrom": "tagConfigs",
+          "tableTo": "objectTypes",
           "columnsFrom": [
-            "sensor_config_ID"
+            "object_type_ID"
           ],
           "columnsTo": [
-            "sensor_config_ID"
+            "object_type_ID"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "Sensors_tag_ID_Tags_tag_ID_fk": {
-          "name": "Sensors_tag_ID_Tags_tag_ID_fk",
-          "tableFrom": "Sensors",
-          "tableTo": "Tags",
+        "tagConfigs_object_config_ID_objectConfigs_object_config_ID_fk": {
+          "name": "tagConfigs_object_config_ID_objectConfigs_object_config_ID_fk",
+          "tableFrom": "tagConfigs",
+          "tableTo": "objectConfigs",
+          "columnsFrom": [
+            "object_config_ID"
+          ],
+          "columnsTo": [
+            "object_config_ID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "tagConfigs_tag_ID_tags_tag_ID_fk": {
+          "name": "tagConfigs_tag_ID_tags_tag_ID_fk",
+          "tableFrom": "tagConfigs",
+          "tableTo": "tags",
           "columnsFrom": [
             "tag_ID"
           ],
@@ -565,8 +651,8 @@
       },
       "compositePrimaryKeys": {}
     },
-    "Tags": {
-      "name": "Tags",
+    "tags": {
+      "name": "tags",
       "schema": "",
       "columns": {
         "tag_ID": {
@@ -575,87 +661,19 @@
           "primaryKey": true,
           "notNull": true
         },
-        "type_sensor_ID": {
-          "name": "type_sensor_ID",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
         "name": {
           "name": "name",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "Tags_type_sensor_ID_TypeSensor_type_sensor_ID_fk": {
-          "name": "Tags_type_sensor_ID_TypeSensor_type_sensor_ID_fk",
-          "tableFrom": "Tags",
-          "tableTo": "TypeSensor",
-          "columnsFrom": [
-            "type_sensor_ID"
-          ],
-          "columnsTo": [
-            "type_sensor_ID"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {}
     },
-    "TagsConfig": {
-      "name": "TagsConfig",
-      "schema": "",
-      "columns": {
-        "type_sensor_ID": {
-          "name": "type_sensor_ID",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "sensor_config_ID": {
-          "name": "sensor_config_ID",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "TagsConfig_type_sensor_ID_TypeSensor_type_sensor_ID_fk": {
-          "name": "TagsConfig_type_sensor_ID_TypeSensor_type_sensor_ID_fk",
-          "tableFrom": "TagsConfig",
-          "tableTo": "TypeSensor",
-          "columnsFrom": [
-            "type_sensor_ID"
-          ],
-          "columnsTo": [
-            "type_sensor_ID"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "TagsConfig_sensor_config_ID_SensorConfig_sensor_config_ID_fk": {
-          "name": "TagsConfig_sensor_config_ID_SensorConfig_sensor_config_ID_fk",
-          "tableFrom": "TagsConfig",
-          "tableTo": "SensorConfig",
-          "columnsFrom": [
-            "sensor_config_ID"
-          ],
-          "columnsTo": [
-            "sensor_config_ID"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {}
-    },
-    "Thresholds": {
-      "name": "Thresholds",
+    "thresholds": {
+      "name": "thresholds",
       "schema": "",
       "columns": {
         "threshold_ID": {
@@ -664,15 +682,15 @@
           "primaryKey": true,
           "notNull": true
         },
-        "sensor_ID": {
-          "name": "sensor_ID",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
         "name": {
           "name": "name",
           "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value_min": {
+          "name": "value_min",
+          "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
@@ -682,24 +700,24 @@
           "primaryKey": false,
           "notNull": false
         },
-        "value_min": {
-          "name": "value_min",
-          "type": "numeric",
+        "sensor_ID": {
+          "name": "sensor_ID",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "Thresholds_sensor_ID_Sensors_sensor_ID_fk": {
-          "name": "Thresholds_sensor_ID_Sensors_sensor_ID_fk",
-          "tableFrom": "Thresholds",
-          "tableTo": "Sensors",
+        "thresholds_sensor_ID_objects_object_ID_fk": {
+          "name": "thresholds_sensor_ID_objects_object_ID_fk",
+          "tableFrom": "thresholds",
+          "tableTo": "objects",
           "columnsFrom": [
             "sensor_ID"
           ],
           "columnsTo": [
-            "sensor_ID"
+            "object_ID"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -707,12 +725,113 @@
       },
       "compositePrimaryKeys": {}
     },
-    "TypeSensor": {
-      "name": "TypeSensor",
+    "thresholdsTriggers": {
+      "name": "thresholdsTriggers",
       "schema": "",
       "columns": {
-        "type_sensor_ID": {
-          "name": "type_sensor_ID",
+        "threshold_trigger_ID": {
+          "name": "threshold_trigger_ID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "trigger_event": {
+          "name": "trigger_event",
+          "type": "triggerEvent",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "threshold_ID": {
+          "name": "threshold_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "trigger_ID": {
+          "name": "trigger_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "thresholdsTriggers_threshold_ID_thresholds_threshold_ID_fk": {
+          "name": "thresholdsTriggers_threshold_ID_thresholds_threshold_ID_fk",
+          "tableFrom": "thresholdsTriggers",
+          "tableTo": "thresholds",
+          "columnsFrom": [
+            "threshold_ID"
+          ],
+          "columnsTo": [
+            "threshold_ID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "thresholdsTriggers_trigger_ID_triggers_trigger_ID_fk": {
+          "name": "thresholdsTriggers_trigger_ID_triggers_trigger_ID_fk",
+          "tableFrom": "thresholdsTriggers",
+          "tableTo": "triggers",
+          "columnsFrom": [
+            "trigger_ID"
+          ],
+          "columnsTo": [
+            "trigger_ID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {}
+    },
+    "triggers": {
+      "name": "triggers",
+      "schema": "",
+      "columns": {
+        "trigger_ID": {
+          "name": "trigger_ID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "new_state": {
+          "name": "new_state",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "object_ID": {
+          "name": "object_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "triggers_object_ID_objects_object_ID_fk": {
+          "name": "triggers_object_ID_objects_object_ID_fk",
+          "tableFrom": "triggers",
+          "tableTo": "objects",
+          "columnsFrom": [
+            "object_ID"
+          ],
+          "columnsTo": [
+            "object_ID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {}
+    },
+    "users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "user_ID": {
+          "name": "user_ID",
           "type": "serial",
           "primaryKey": true,
           "notNull": true
@@ -721,22 +840,39 @@
           "name": "name",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {}
-    },
-    "Users": {
-      "name": "Users",
-      "schema": "",
-      "columns": {
-        "user_ID": {
-          "name": "user_ID",
-          "type": "serial",
-          "primaryKey": true,
           "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "password": {
+          "name": "password",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "joined_at": {
+          "name": "joined_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "permissions": {
+          "name": "permissions",
+          "type": "permission[]",
+          "primaryKey": false,
+          "notNull": true,
+          "default": []
+        },
+        "block_ID": {
+          "name": "block_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
         },
         "invitation_ID": {
           "name": "invitation_ID",
@@ -748,72 +884,55 @@
           "name": "role_ID",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "email": {
-          "name": "email",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "password": {
-          "name": "password",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "joined_at": {
-          "name": "joined_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "permissions": {
-          "name": "permissions",
-          "type": "permission[]",
-          "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "Users_invitation_ID_Invitations_invitation_ID_fk": {
-          "name": "Users_invitation_ID_Invitations_invitation_ID_fk",
-          "tableFrom": "Users",
-          "tableTo": "Invitations",
+        "users_block_ID_blocks_block_ID_fk": {
+          "name": "users_block_ID_blocks_block_ID_fk",
+          "tableFrom": "users",
+          "tableTo": "blocks",
           "columnsFrom": [
-            "invitation_ID"
+            "block_ID"
           ],
           "columnsTo": [
-            "invitation_ID"
+            "block_ID"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "Users_role_ID_Roles_role_ID_fk": {
-          "name": "Users_role_ID_Roles_role_ID_fk",
-          "tableFrom": "Users",
-          "tableTo": "Roles",
+        "users_invitation_ID_invitations_invitation_ID_fk": {
+          "name": "users_invitation_ID_invitations_invitation_ID_fk",
+          "tableFrom": "users",
+          "tableTo": "invitations",
+          "columnsFrom": [
+            "invitation_ID"
+          ],
+          "columnsTo": [
+            "invitation_ID"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "users_role_ID_roles_role_ID_fk": {
+          "name": "users_role_ID_roles_role_ID_fk",
+          "tableFrom": "users",
+          "tableTo": "roles",
           "columnsFrom": [
             "role_ID"
           ],
           "columnsTo": [
             "role_ID"
           ],
-          "onDelete": "cascade",
+          "onDelete": "no action",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {}
     },
-    "UsersAccess": {
-      "name": "UsersAccess",
+    "usersToAccesses": {
+      "name": "usersToAccesses",
       "schema": "",
       "columns": {
         "user_access_ID": {
@@ -822,24 +941,49 @@
           "primaryKey": true,
           "notNull": true
         },
-        "access_ID": {
-          "name": "access_ID",
+        "user_ID": {
+          "name": "user_ID",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
+        },
+        "have_access": {
+          "name": "have_access",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hall_ID": {
+          "name": "hall_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "UsersAccess_access_ID_Access_access_ID_fk": {
-          "name": "UsersAccess_access_ID_Access_access_ID_fk",
-          "tableFrom": "UsersAccess",
-          "tableTo": "Access",
+        "usersToAccesses_user_ID_users_user_ID_fk": {
+          "name": "usersToAccesses_user_ID_users_user_ID_fk",
+          "tableFrom": "usersToAccesses",
+          "tableTo": "users",
           "columnsFrom": [
-            "access_ID"
+            "user_ID"
           ],
           "columnsTo": [
-            "access_ID"
+            "user_ID"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "usersToAccesses_hall_ID_halls_hall_ID_fk": {
+          "name": "usersToAccesses_hall_ID_halls_hall_ID_fk",
+          "tableFrom": "usersToAccesses",
+          "tableTo": "halls",
+          "columnsFrom": [
+            "hall_ID"
+          ],
+          "columnsTo": [
+            "hall_ID"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -849,8 +993,8 @@
     }
   },
   "enums": {
-    "impact": {
-      "name": "impact",
+    "importance": {
+      "name": "importance",
       "values": {
         "high": "high",
         "medium": "medium",
@@ -867,6 +1011,13 @@
         "view_sensors": "view_sensors",
         "manage_sensors": "manage_sensors",
         "add_sensors": "add_sensors"
+      }
+    },
+    "triggerEvent": {
+      "name": "triggerEvent",
+      "values": {
+        "lessThanMin": "lessThanMin",
+        "greaterThanMax": "greaterThanMax"
       }
     }
   },
