@@ -26,7 +26,8 @@ import {
   DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu'
 
-export function ComboboxDropdownMenu(userid: string) {
+export function ComboboxDropdownMenu(data: object) {
+    
   const [label, setLabel] = React.useState('feature')
   const [open, setOpen] = React.useState(false)
   const [labels, setLabels] = React.useState([
@@ -35,6 +36,8 @@ export function ComboboxDropdownMenu(userid: string) {
     { name: 'design', select: true },
     { name: 'maintenance', select: false },
     { name: 'scientifique', select: false },
+    { name: 'feature2', select: true },
+    { name: 'bug2', select: false },
   ])
 
   return (
@@ -50,23 +53,23 @@ export function ComboboxDropdownMenu(userid: string) {
         <DropdownMenuGroup>
           <DropdownMenuItem disabled>
             <Mails className="mr-2 h-4 w-4" />
-              email
+            {data.user.email}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
               <Tags className="mr-2 h-4 w-4" />
-                Apply tag
+                Appliquer Role
             </DropdownMenuSubTrigger>
             <DropdownMenuSubContent className="p-0">
               <Command>
                 <CommandInput
-                  placeholder="Filter tag..."
+                  placeholder="Filtre roles..."
                   autoFocus={true}
                 />
-                <CommandList>
-                  <CommandEmpty>No tag found.</CommandEmpty>
-                  <CommandGroup>
+                <CommandList className='max-h-60'>
+                  <CommandEmpty>Aucun role trouvé.</CommandEmpty>
+                  <CommandGroup >
                     {labels.map((label, index) => (
                       <CommandItem
                         className='justify-between'
@@ -96,7 +99,7 @@ export function ComboboxDropdownMenu(userid: string) {
           <DropdownMenuSeparator />
           <DropdownMenuItem className="text-red-600">
             <Trash className="mr-2 h-4 w-4" />
-              Delete
+              Supprimer
             <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuGroup>

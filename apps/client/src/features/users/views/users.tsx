@@ -21,11 +21,16 @@ import {
 export function Users() {
 
   const Users = [
-    { userid: 'aled', name: 'Martin', date: '12/06/30' },
-    { userid: 'aled', name: 'Cyp', date: '12/06/30' },
-    { userid: 'aled', name: 'Jules', date: '12/06/30' },
-    { userid: 'aled', name: 'Mehdi', date: '12/06/30' },
-    { userid: 'aled', name: 'Arthur', date: '12/06/30' },
+    { userid: 'aled', name: 'Martin', 
+      email: 'aled@gmail.com', date: '12/06/30' },
+    { userid: 'aled', name: 'Cyp', 
+      email: 'aled@gmail.com', date: '12/06/30' },
+    { userid: 'aled', name: 'Jules', 
+      email: 'aled@gmail.com', date: '12/06/30' },
+    { userid: 'aled', name: 'Mehdi', 
+      email: 'aled@gmail.com', date: '12/06/30' },
+    { userid: 'aled', name: 'Arthur', 
+      email: 'aled@gmail.com', date: '12/06/30' },
   ]
   return (
     <div className='px-16 pt-20'>
@@ -89,7 +94,7 @@ export function Users() {
                 <CardDescription>{user.date}</CardDescription>
               </div>
               <div className='mb-6'>
-                <ComboboxDropdownMenu userid={user.userid}>
+                <ComboboxDropdownMenu user={user}>
 
                 </ComboboxDropdownMenu>
               </div>
