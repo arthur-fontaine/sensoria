@@ -6,24 +6,29 @@ import jwt from 'jsonwebtoken'
 import type { Resolvers } from '../..'
 import { database } from '../../db'
 import { users } from '../../db/schema'
+import type { ResolverFunction } from '../../types/resolver-functions'
 
 let JWT_SECRET = ''
 
 if (typeof window === 'undefined') {
   dotenv.config()
-  
+
   if (process.env.JWT_SECRET === undefined) {
     throw new Error('JWT_SECRET is undefined')
   }
-  
+
   JWT_SECRET = process.env.JWT_SECRET
 }
 
-export const loginQueryResolver: NonNullable<
-  Resolvers['Query']['authentication']
-> = (_parent, args) => {
-  return authentication(args.email, args.password)
-}
+type LoginQueryResolver = (
+  ResolverFunction<NonNullable<Resolvers['Query']['authentication']>>
+)
+
+export const loginQueryResolver: LoginQueryResolver = (
+  (_parent, args) => {
+    return authentication(args.email, args.password)
+  }
+)
 
 async function authentication(email: string, password: string) {
   const { userPassword, userId } = await database
@@ -35,10 +40,10 @@ async function authentication(email: string, password: string) {
       userId: user?.id,
     }))
 
-  if (userPassword === undefined || userPassword === null ) {
+  if (userPassword === undefined || userPassword === null) {
     throw new Error('User not found')
   }
-  
+
   const validPassword = await bcrypt.compare(password, userPassword)
 
   if (!validPassword) {
