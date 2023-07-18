@@ -1,4 +1,5 @@
 import { Search, Calendar } from 'lucide-react'
+import { useState, useEffect } from 'react'
 
 import {DialogAddUser} from '../components/addusers'
 import {ComboboxDropdownMenu} from '../components/dropdown'
@@ -21,18 +22,49 @@ import {
 
 export function Users() {
 
+  const roles = [
+    { value: 'admin', label: 'Administrateur' },
+    { value: 'moderator', label: 'Modérateur' },
+    { value: 'user', label: 'Utilisateur' },
+    { value: 'piegon', label: 'Oiseau' },
+    { value: 'aled', label: 'Alllleeed' },
+  ]
+
   const Users = [
     { userid: 'aled', name: 'Martin', 
-      email: 'aled@gmail.com', date: '12/06/30' },
+      email: 'aled@gmail.com', date: '12/06/30', 
+      role: {value: 'aled', label: 'Alllleeed'} },
     { userid: 'aled', name: 'Cyp', 
-      email: 'aled@gmail.com', date: '12/06/30' },
+      email: 'aled@gmail.com', date: '12/06/30',
+      role: {value: 'aled', label: 'Alllleeed'} },
     { userid: 'aled', name: 'Jules', 
-      email: 'aled@gmail.com', date: '12/06/30' },
+      email: 'aled@gmail.com', date: '12/06/30',
+      role: {value: 'aled', label: 'Alllleeed'} },
     { userid: 'aled', name: 'Mehdi', 
-      email: 'aled@gmail.com', date: '12/06/30' },
+      email: 'aled@gmail.com', date: '12/06/30',
+      role: {value: 'user', label: 'Utilisateur'} },
     { userid: 'aled', name: 'Arthur', 
-      email: 'aled@gmail.com', date: '12/06/30' },
+      email: 'aled@gmail.com', date: '12/06/30',
+      role: {value: 'moderator', label: 'Modérateur'} },
   ]
+
+  const [selectedRole, setSelectedRole] = useState<string | null>()
+  const [filteredUsers, setFilteredUsers] = useState(Users)
+  const [searchQuery, setSearchQuery] = useState('')
+  
+  useEffect(() => {
+    if(searchQuery){
+      const filtered = Users.filter((user) =>
+        user.name.toLowerCase().startsWith(searchQuery.toLowerCase()))
+      setFilteredUsers(filtered)
+    } else if (selectedRole) {
+      const filtered = Users.filter((user) => user.role.value === selectedRole)
+      setFilteredUsers(filtered)
+    } else {
+      setFilteredUsers(Users)
+    }
+  }, [selectedRole, searchQuery])
+  
   return (
     <div className='px-16 pt-20'>
       <div className='flex flex-col gap-4 mb-14'>
@@ -60,20 +92,26 @@ export function Users() {
             <Input 
               className=' w-[400px]'
               placeholder="Recherche"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
             />
           </div>
-          <Select>
+          <Select onValueChange={(value) => setSelectedRole(value)}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filtre" />
+              <SelectValue
+                placeholder="Filtre" 
+                
+              >
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Roles</SelectLabel>
-                <SelectItem value="apple">Apple</SelectItem>
-                <SelectItem value="banana">Banana</SelectItem>
-                <SelectItem value="blueberry">Blueberry</SelectItem>
-                <SelectItem value="grapes">Grapes</SelectItem>
-                <SelectItem value="pineapple">Pineapple</SelectItem>
+                {roles.map((role) => (
+                  <SelectItem key={role.value} value={role.value}>
+                    {role.label}
+                  </SelectItem>
+                ))}
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -84,7 +122,7 @@ export function Users() {
         </div>
       </div>
       <div className='grid grid-cols-2 gap-4'>
-        {Users.map((user, index) => (
+        {filteredUsers.map((user, index) => (
           <Card key={index}>
             <CardHeader className='pb-0'>
               <CardTitle>{user.name}</CardTitle>
@@ -95,9 +133,7 @@ export function Users() {
                 <CardDescription>{user.date}</CardDescription>
               </div>
               <div className='mb-6'>
-                <ComboboxDropdownMenu user={user}>
-
-                </ComboboxDropdownMenu>
+                <ComboboxDropdownMenu user={user}></ComboboxDropdownMenu>
               </div>
             </CardContent>
           </Card>
