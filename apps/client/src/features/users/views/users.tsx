@@ -1,5 +1,6 @@
 import { Search, Calendar } from 'lucide-react'
 
+import {DialogAddUser} from '../components/addusers'
 import {ComboboxDropdownMenu} from '../components/dropdown'
 
 import { Button } from '@/shared/components/ui/button'
@@ -79,7 +80,7 @@ export function Users() {
         </div>
         <div className='flex gap-4'>
           <Button variant="secondary">Roles</Button>
-          <Button>Inviter un collaborateur</Button>
+          <DialogAddUser></DialogAddUser>
         </div>
       </div>
       <div className='grid grid-cols-2 gap-4'>
