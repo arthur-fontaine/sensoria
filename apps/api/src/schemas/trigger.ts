@@ -4,5 +4,5 @@ import { objectType } from './object'
 
 export const triggerType = g.type('Trigger', {
   newState: g.boolean(),
-  object: g.ref(() => objectType),
+  object: g.ref(() => objectType).omitResolver(),
 })

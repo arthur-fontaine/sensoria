@@ -6,9 +6,19 @@ import {
   modifyPasswordMutationResolver,
 } from './resolvers/mutations/modify-password'
 import { loginQueryResolver } from './resolvers/queries/authentication'
-import { getObjectsQueryResolver } from './resolvers/queries/get-objects'
-import { blockInputType, blockType } from './types/block'
-import { objectType } from './types/object'
+import {
+  getLastMeasureFromObjectQueryResolver, getMeasuresFromObjectQueryResolver,
+  getObjectsQueryResolver, getTagsFromObjectQueryResolver,
+  getThresholdsFromObjectQueryResolver,
+} from './resolvers/queries/get-objects'
+import { blockInputType, blockType } from './schemas/block'
+import type { hallType } from './schemas/hall'
+import type { measureType } from './schemas/measure'
+import { objectType } from './schemas/object'
+import type { tagType } from './schemas/tag'
+import type { thresholdType } from './schemas/threshold'
+import type { thresholdTriggerType } from './schemas/threshold-trigger'
+import type { triggerType } from './schemas/trigger'
 
 export const queryType = g.type('Query', {
   authentication: g.string()
@@ -41,6 +51,14 @@ export const mutationType = g.type('Mutation', {
 export type Resolvers = InferResolvers<{
   Query: typeof queryType
   Mutation: typeof mutationType
+  Block: typeof blockType
+  Hall: typeof hallType
+  Measure: typeof measureType
+  Object: typeof objectType
+  Tag: typeof tagType
+  Threshold: typeof thresholdType
+  ThresholdTrigger: typeof thresholdTriggerType
+  Trigger: typeof triggerType
 }, { context: YogaInitialContext }>
 
 const resolvers: Resolvers = {
@@ -51,6 +69,34 @@ const resolvers: Resolvers = {
   Mutation: {
     createBlock: createBlockMutationResolver,
     modifyPassword: modifyPasswordMutationResolver,
+  },
+  Object: {
+    lastMeasure: getLastMeasureFromObjectQueryResolver,
+    measures: getMeasuresFromObjectQueryResolver,
+    tags: getTagsFromObjectQueryResolver,
+    thresholds: getThresholdsFromObjectQueryResolver,
+  },
+  Block: {
+    // halls: getHallsFromBlockQueryResolver,
+  },
+  Hall: {
+    // block: getBlockFromHallQueryResolver,
+    // objects: getObjectsFromHallQueryResolver,
+  },
+  Measure: {
+    // sensor: getSensorFromMeasureQueryResolver,
+  },
+  Tag: {},
+  ThresholdTrigger: {
+    // trigger: getTriggerFromThresholdTriggerQueryResolver,
+    // threshold: getThresholdFromThresholdTriggerQueryResolver,
+  },
+  Threshold: {
+    // triggers: getTriggersFromThresholdQueryResolver,
+    // sensor: getSensorFromThresholdQueryResolver,
+  },
+  Trigger: {
+    // object: getObjectFromTriggerQueryResolver,
   },
 }
 
