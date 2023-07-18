@@ -1,5 +1,7 @@
 import { Search, Calendar } from 'lucide-react'
 
+import {ComboboxDropdownMenu} from '../components/dropdown'
+
 import { Button } from '@/shared/components/ui/button'
 import { Card,
   CardHeader,
@@ -19,11 +21,11 @@ import {
 export function Users() {
 
   const Users = [
-    { name: 'Martin', date: '12/06/30' },
-    { name: 'Cyp', date: '12/06/30' },
-    { name: 'Jules', date: '12/06/30' },
-    { name: 'Mehdi', date: '12/06/30' },
-    { name: 'Arthur', date: '12/06/30' },
+    { userid: 'aled', name: 'Martin', date: '12/06/30' },
+    { userid: 'aled', name: 'Cyp', date: '12/06/30' },
+    { userid: 'aled', name: 'Jules', date: '12/06/30' },
+    { userid: 'aled', name: 'Mehdi', date: '12/06/30' },
+    { userid: 'aled', name: 'Arthur', date: '12/06/30' },
   ]
   return (
     <div className='px-16 pt-20'>
@@ -77,13 +79,20 @@ export function Users() {
       </div>
       <div className='grid grid-cols-2 gap-4'>
         {Users.map((user, index) => (
-          <Card className="" key={index}>
-            <CardHeader>
+          <Card key={index}>
+            <CardHeader className='pb-0'>
               <CardTitle>{user.name}</CardTitle>
             </CardHeader>
-            <CardContent className='flex items-center gap-2'>
-              <Calendar color='#64748B' size={16} />
-              <CardDescription>{user.date}</CardDescription>
+            <CardContent className='flex justify-between'>
+              <div className='flex items-center gap-2'>
+                <Calendar color='#64748B' size={16} />
+                <CardDescription>{user.date}</CardDescription>
+              </div>
+              <div className='mb-6'>
+                <ComboboxDropdownMenu userid={user.userid}>
+
+                </ComboboxDropdownMenu>
+              </div>
             </CardContent>
           </Card>
         ))}
