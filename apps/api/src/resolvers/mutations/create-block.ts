@@ -3,10 +3,11 @@ import { eq } from 'drizzle-orm'
 import type { Resolvers } from '../..'
 import { database } from '../../db'
 import { blocks, halls, objects } from '../../db/schema'
+import type { ResolverFunction } from '../../types/resolver-functions'
 
-type CreateBlockMutationResolver = NonNullable<
+type CreateBlockMutationResolver = ResolverFunction<NonNullable<
   Resolvers['Mutation']['createBlock']
->
+>>
 
 export const createBlockMutationResolver: CreateBlockMutationResolver = (
   (_parent, args, _context, _info) => {
