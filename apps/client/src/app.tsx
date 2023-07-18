@@ -1,6 +1,7 @@
 import { Label } from '@radix-ui/react-label'
 
 import { Dashboard } from '@/features/dashboard/views/dashboard'
+import { Graph } from '@/features/graph/views/graph'
 import { Login } from '@/features/login/views/login'
 import { Updatepassword } from '@/features/login/views/updatepassword'
 import { Onboarding } from '@/features/onboarding/views/onboarding'
@@ -17,6 +18,7 @@ export function App() {
     'Dashboard',
     'Users',
     'Tag',
+    'Graph',
   ])
 
   const token = sessionStorage.getItem('token') ?? localStorage.getItem('token')
@@ -46,6 +48,9 @@ export function App() {
     }
     case 'Tag': {
       return <Tag />
+    }
+    case 'Graph': {
+      return <Graph />
     }
 
     default: {
