@@ -6,7 +6,10 @@ import {
   modifyPasswordMutationResolver,
 } from './resolvers/mutations/modify-password'
 import { loginQueryResolver } from './resolvers/queries/authentication'
-import { getAlarmsQueryResolver } from './resolvers/queries/get-alarms'
+import {
+  getMeasureFromNotificationsQueryResolver,
+  getNotificationsQueryResolver,
+} from './resolvers/queries/get-notifications'
 import {
   getLastMeasureFromObjectQueryResolver, getMeasuresFromObjectQueryResolver,
   getObjectsQueryResolver, getTagsFromObjectQueryResolver,
@@ -15,12 +18,12 @@ import {
 import { blockInputType, blockType } from './schemas/block'
 import type { hallType } from './schemas/hall'
 import type { measureType } from './schemas/measure'
+import { notificationsType } from './schemas/notifications'
 import { objectType } from './schemas/object'
 import type { tagType } from './schemas/tag'
 import type { thresholdType } from './schemas/threshold'
 import type { thresholdTriggerType } from './schemas/threshold-trigger'
 import type { triggerType } from './schemas/trigger'
-import { alarmsType } from './types/alarms'
 
 export const queryType = g.type('Query', {
   authentication: g.string()
@@ -29,9 +32,12 @@ export const queryType = g.type('Query', {
       password: g.string(),
     }),
   objects: g.ref(() => objectType).list()
+    .args({
+      id: g.int().optional(),
+    })
     .description('Get all objects'),
-  getAlarms: g.ref(alarmsType).list()
-    .description('Get all alarms'),
+  notifications: g.ref(() => notificationsType).list()
+    .description('Get all notifications'),
 })
 
 export const mutationType = g.type('Mutation', {
@@ -55,6 +61,7 @@ export type Resolvers = InferResolvers<{
   Block: typeof blockType
   Hall: typeof hallType
   Measure: typeof measureType
+  Notifications: typeof notificationsType
   Object: typeof objectType
   Tag: typeof tagType
   Threshold: typeof thresholdType
@@ -66,7 +73,7 @@ const resolvers: Resolvers = {
   Query: {
     objects: getObjectsQueryResolver,
     authentication: loginQueryResolver,
-    getAlarms: getAlarmsQueryResolver,
+    notifications: getNotificationsQueryResolver,
   },
   Mutation: {
     createBlock: createBlockMutationResolver,
@@ -87,6 +94,9 @@ const resolvers: Resolvers = {
   },
   Measure: {
     // sensor: getSensorFromMeasureQueryResolver,
+  },
+  Notifications: {
+    measure: getMeasureFromNotificationsQueryResolver,
   },
   Tag: {},
   ThresholdTrigger: {

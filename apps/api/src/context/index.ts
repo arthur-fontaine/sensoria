@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 import type { YogaInitialContext } from 'graphql-yoga'
-import { verify, JwtPayload } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 
 dotenv.config()
 
@@ -21,7 +21,7 @@ export async function createContext(initialContext: YogaInitialContext) {
       throw new Error('No authorization provided.')
     }
 
-    const tokenPayload = verify(token, JWT_SECRET) as JwtPayload
+    const tokenPayload = jwt.verify(token, JWT_SECRET) as jwt.JwtPayload
     userId = tokenPayload.userId
 
     if (userId === undefined || typeof userId !== 'number') {
