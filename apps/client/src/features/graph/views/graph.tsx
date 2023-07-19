@@ -1,3 +1,5 @@
+import { Test } from './components/test'
+
 import { Label } from '@/shared/components/ui/label'
 import { 
   Select, 
@@ -34,7 +36,7 @@ export function Graph() {
           Visualisez l’ensemble de vos capteurs et dispositifs.        
         </h4>
       </div>
-      <div className='flex gap-4'>
+      <div className='flex gap-4 mb-14'>
         <div>
           <Label>Période d’affichage</Label>
           <Select >
@@ -95,6 +97,9 @@ export function Graph() {
           </Select>
         </div>
       </div>
+      <Test/>
+
     </div>
   )
 }
+
