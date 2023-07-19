@@ -98,7 +98,7 @@
     @apply bg-background text-foreground overflow-hidden;
   }
 }
-
 html,body,#root{
   height: 100vh;
+  overflow-y: scroll;
 }
