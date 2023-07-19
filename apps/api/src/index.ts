@@ -15,9 +15,12 @@ import {
   getObjectsQueryResolver, getTagsFromObjectQueryResolver,
   getThresholdsFromObjectQueryResolver,
 } from './resolvers/queries/get-objects'
+import {
+  sensorDataSubscribeResolver,
+} from './resolvers/subscriptions/subscribe-to-sensor-data'
 import { blockInputType, blockType } from './schemas/block'
 import type { hallType } from './schemas/hall'
-import type { measureType } from './schemas/measure'
+import { measureType } from './schemas/measure'
 import { notificationsType } from './schemas/notifications'
 import { objectType } from './schemas/object'
 import type { tagType } from './schemas/tag'
@@ -55,9 +58,19 @@ export const mutationType = g.type('Mutation', {
     .description('Create a new block'),
 })
 
+export const subscriptionType = g.type('Subscription', {
+  sensorData: g.ref(() => measureType)
+    .args({
+      blockId: g.int().optional(),
+      sensorId: g.int().optional(),
+    })
+    .description('Get sensor data'),
+})
+
 export type Resolvers = InferResolvers<{
   Query: typeof queryType
   Mutation: typeof mutationType
+  Subscription: typeof subscriptionType
   Block: typeof blockType
   Hall: typeof hallType
   Measure: typeof measureType
@@ -78,6 +91,9 @@ const resolvers: Resolvers = {
   Mutation: {
     createBlock: createBlockMutationResolver,
     modifyPassword: modifyPasswordMutationResolver,
+  },
+  Subscription: {
+    sensorData: sensorDataSubscribeResolver,
   },
   Object: {
     lastMeasure: getLastMeasureFromObjectQueryResolver,
