@@ -14,4 +14,10 @@
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
+  "[markdown]": {
+    "editor.wordWrap": "on"
+  },
+  "editor.wordWrap": "wordWrapColumn",
+  "diffEditor.wordWrap": "on",
+  "prettier.enable": false,
 }
