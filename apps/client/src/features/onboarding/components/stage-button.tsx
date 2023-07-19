@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 
 interface StageButtonProperties {
   onClick?: () => void
+  selected?: boolean
 }
 
 export function StageButton(
@@ -14,45 +15,48 @@ export function StageButton(
     children,
     stage,
     onClick,
+    selected,
   }: (
       | PropsWithChildren<StageButtonProperties & { stage?: never }>
       | StageButtonProperties & { children?: never, stage: Stage }
     ),
 ) {
-  const stageIndex = useStagesStore(
-    (state) => stage === undefined ? -1 : state.stages.indexOf(stage),
-  )
-  const selectedStageIndex = useStagesStore(
-    (state) => state.currentStageIndex,
-  )
-  const selectStage = useStagesStore(
-    (state) => state.selectStage,
-  )
+  const { stageIndex, selectedStageIndex, selectStage } = selected === undefined
+    ? useStagesStore(
+      (state) => ({
+        stageIndex: stage === undefined ? -1 : state.stages.indexOf(stage),
+        selectedStageIndex: state.currentStageIndex,
+        selectStage: state.selectStage,
+      }),
+    )
+    : ({} as Record<string, undefined>)
 
   const stageItemStyle = 'flex items-center justify-center ' +
-    'p-12 bg-card rounded-lg select-none ' +
+    'py-12 px-4 h-0 aspect-square bg-card rounded-lg select-none ' +
     'text-card-foreground'
 
   return (
     <div
-      data-index={stageIndex}
       className={cn(
         stageItemStyle,
-        stageIndex !== selectedStageIndex && 'bg-muted text-muted-foreground',
+        (!selected || stageIndex !== selectedStageIndex)
+        && 'bg-muted text-muted-foreground',
       )}
       onClick={
         onClick === undefined && stageIndex !== -1
-          ? () => selectStage(stageIndex)
+          ? () => selectStage?.(stageIndex!)
           : onClick
       }
     >
-      {
-        stage === undefined
-          ? children
-          : (stage.name.length === 0
-            ? '\u00A0'
-            : stage.name)
-      }
+      <span className='w-full truncate'>
+        {
+          stage === undefined
+            ? children
+            : (stage.name.length === 0
+              ? '\u00A0'
+              : stage.name)
+        }
+      </span>
     </div>
   )
 }
