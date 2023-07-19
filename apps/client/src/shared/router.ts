@@ -6,5 +6,6 @@ export const Router = createRouter({
   Onboarding: '/onboarding/:step',
   Dashboard: '/dashboard',
   Users: '/users',
+  Roles: '/roles',
   Tag: '/tags/:tagId',
 })
