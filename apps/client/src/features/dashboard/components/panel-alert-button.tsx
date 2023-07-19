@@ -1,4 +1,4 @@
-import { AlertTriangle, BellDot } from 'lucide-react'
+import { AlertTriangleIcon, BellDotIcon } from 'lucide-react'
 
 import { 
   Alert, 
@@ -37,7 +37,9 @@ export function PanelAlert() {
     <div>
       <Sheet>
         <SheetTrigger asChild>
-          <Button variant="outline" size="icon"><BellDot size={24}/></Button>
+          <Button variant="outline" size="icon">
+            <BellDotIcon size={24}/>
+          </Button>
         </SheetTrigger>
         <SheetContent 
           className="border-none">
@@ -53,9 +55,9 @@ export function PanelAlert() {
               || undefined
                 return (
                   <Alert key={index} className={`p-6 mb-4  ${importanceStyle}`}>
-                    <AlertTriangle size={18}
+                    <AlertTriangleIcon size={18}
                       color={triangleColor} 
-                      className='mt-3'/>
+                      className='mt-3 color: inherit;'/>
                     <AlertTitle className='flex justify-between mb-2'>
                       <span className='line-clamp-2'>
                         {notif.measure.measureType}
