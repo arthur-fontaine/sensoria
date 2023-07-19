@@ -7,7 +7,9 @@ export const blockType = g.type('Block', {
   blockId: g.int().description('The block ID'),
   name: g.string().description('The block name'),
   location: g.ref(() => coordinates).description('The block location'),
-  halls: g.ref(() => hallType).list().description('The block hall'),
+  halls: g.ref(() => hallType).list()
+    .omitResolver()
+    .description('The block hall'),
 })
 
 export const blockInputType = g.inputType('BlockInput', {
