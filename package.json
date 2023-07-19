@@ -35,7 +35,8 @@
   },
   "pnpm": {
     "patchedDependencies": {
-      "@gqty/react@2.1.0": "patches/@gqty__react@2.1.0.patch"
+      "@gqty/react@2.1.0": "patches/@gqty__react@2.1.0.patch",
+      "gqty@3.0.0-alpha-e9f8f97b.0": "patches/gqty@3.0.0-alpha-e9f8f97b.0.patch"
     }
   }
 }

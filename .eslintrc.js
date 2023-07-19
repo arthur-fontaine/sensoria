@@ -188,7 +188,7 @@ module.exports = {
     '*.config.*',
     'dist',
     // ignore components from Shadcn
-    'apps/client/src/components/ui/*',
+    'apps/client/src/shared/components/ui/*',
     // ignore drizzle codegen files
     'apps/api/drizzle/*',
   ],
