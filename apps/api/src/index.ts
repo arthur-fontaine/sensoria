@@ -1,11 +1,15 @@
 import { type InferResolvers, buildSchema, g } from 'garph'
-import type { YogaInitialContext } from 'graphql-yoga'
 
+import type { Context } from './context/context'
 import { createBlockMutationResolver } from './resolvers/mutations/create-block'
 import {
   modifyPasswordMutationResolver,
 } from './resolvers/mutations/modify-password'
 import { loginQueryResolver } from './resolvers/queries/authentication'
+import {
+  getBlocksQueryResolver, getHallsFromBlockQueryResolver,
+} from './resolvers/queries/get-blocks'
+import { getObjectsFromHallQueryResolver } from './resolvers/queries/get-halls'
 import {
   getLastMeasureFromObjectQueryResolver, getMeasuresFromObjectQueryResolver,
   getObjectsQueryResolver, getTagsFromObjectQueryResolver,
@@ -27,7 +31,14 @@ export const queryType = g.type('Query', {
       password: g.string(),
     }),
   objects: g.ref(() => objectType).list()
+    .args({
+      id: g.int().optional(),
+    })
     .description('Get all objects'),
+  blocks: g.ref(() => blockType).list()
+    .args({
+      id: g.int().optional(),
+    }),
 })
 
 export const mutationType = g.type('Mutation', {
@@ -56,12 +67,13 @@ export type Resolvers = InferResolvers<{
   Threshold: typeof thresholdType
   ThresholdTrigger: typeof thresholdTriggerType
   Trigger: typeof triggerType
-}, { context: YogaInitialContext }>
+}, { context: Context }>
 
 const resolvers: Resolvers = {
   Query: {
     objects: getObjectsQueryResolver,
     authentication: loginQueryResolver,
+    blocks: getBlocksQueryResolver,
   },
   Mutation: {
     createBlock: createBlockMutationResolver,
@@ -74,11 +86,11 @@ const resolvers: Resolvers = {
     thresholds: getThresholdsFromObjectQueryResolver,
   },
   Block: {
-    // halls: getHallsFromBlockQueryResolver,
+    halls: getHallsFromBlockQueryResolver,
   },
   Hall: {
     // block: getBlockFromHallQueryResolver,
-    // objects: getObjectsFromHallQueryResolver,
+    objects: getObjectsFromHallQueryResolver,
   },
   Measure: {
     // sensor: getSensorFromMeasureQueryResolver,
