@@ -19,51 +19,31 @@ import {
   SelectContent,
   SelectItem,
   SelectLabel } from '@/shared/components/ui/select'
+import { useQuery } from '@/shared/hooks/use-query'
 
 export function Users() {
-
-  const roles = [
-    { value: 'admin', label: 'Administrateur' },
-    { value: 'moderator', label: 'Modérateur' },
-    { value: 'user', label: 'Utilisateur' },
-    { value: 'piegon', label: 'Oiseau' },
-    { value: 'aled', label: 'Alllleeed' },
-  ]
-
-  const Users = [
-    { userid: 'aled', name: 'Martin', 
-      email: 'aled@gmail.com', date: '12/06/30', 
-      role: {value: 'aled', label: 'Alllleeed'} },
-    { userid: 'aled', name: 'Cyp', 
-      email: 'aled@gmail.com', date: '12/06/30',
-      role: {value: 'aled', label: 'Alllleeed'} },
-    { userid: 'aled', name: 'Jules', 
-      email: 'aled@gmail.com', date: '12/06/30',
-      role: {value: 'aled', label: 'Alllleeed'} },
-    { userid: 'aled', name: 'Mehdi', 
-      email: 'aled@gmail.com', date: '12/06/30',
-      role: {value: 'user', label: 'Utilisateur'} },
-    { userid: 'aled', name: 'Arthur', 
-      email: 'aled@gmail.com', date: '12/06/30',
-      role: {value: 'moderator', label: 'Modérateur'} },
-  ]
+  const { roles, users, $state } = useQuery({})
 
   const [selectedRole, setSelectedRole] = useState<string | null>()
-  const [filteredUsers, setFilteredUsers] = useState(Users)
   const [searchQuery, setSearchQuery] = useState('')
-  
+  const [filteredUsers, setFilteredUsers] = useState(users)
+
   useEffect(() => {
-    if(searchQuery){
-      const filtered = Users.filter((user) =>
-        user.name.toLowerCase().startsWith(searchQuery.toLowerCase()))
-      setFilteredUsers(filtered)
-    } else if (selectedRole) {
-      const filtered = Users.filter((user) => user.role.value === selectedRole)
-      setFilteredUsers(filtered)
-    } else {
-      setFilteredUsers(Users)
+    let newUsers = users
+
+    if (searchQuery) {
+      newUsers = newUsers.filter((user) =>
+        user.name?.toLowerCase().includes(searchQuery.toLowerCase()))
     }
-  }, [selectedRole, searchQuery])
+
+    if (selectedRole) {
+      newUsers = newUsers.filter((user) => user.role.name === selectedRole)
+    }
+
+    if (newUsers.length !== filteredUsers.length) {
+      setFilteredUsers(newUsers)
+    }
+  }, [selectedRole, searchQuery, users])
   
   return (
     <div className='px-16 pt-20'>
@@ -104,12 +84,13 @@ export function Users() {
               >
               </SelectValue>
             </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
+            <SelectContent className='max-h-60'>
+              <SelectGroup className=''>
                 <SelectLabel>Roles</SelectLabel>
-                {roles.map((role) => (
-                  <SelectItem key={role.value} value={role.value}>
-                    {role.label}
+                {roles.map((role, index) => (
+                  <SelectItem key={index} value={role.name} 
+                  >
+                    <span className='line-clamp-1	'>{role.name}</span>
                   </SelectItem>
                 ))}
               </SelectGroup>
@@ -122,7 +103,7 @@ export function Users() {
         </div>
       </div>
       <div className='grid grid-cols-2 gap-4'>
-        {filteredUsers.map((user, index) => (
+        {!$state.isLoading && filteredUsers.map((user, index) => (
           <Card key={index}>
             <CardHeader className='pb-0'>
               <CardTitle>{user.name}</CardTitle>
@@ -130,10 +111,13 @@ export function Users() {
             <CardContent className='flex justify-between'>
               <div className='flex items-center gap-2'>
                 <Calendar color='#64748B' size={16} />
-                <CardDescription>{user.date}</CardDescription>
+                <CardDescription>
+                  {new Date(Number(user.joinedAt)).toLocaleDateString()}
+                </CardDescription>
               </div>
               <div className='mb-6'>
-                <ComboboxDropdownMenu user={user}></ComboboxDropdownMenu>
+                <ComboboxDropdownMenu roles={roles} user={user}>
+                </ComboboxDropdownMenu>
               </div>
             </CardContent>
           </Card>
