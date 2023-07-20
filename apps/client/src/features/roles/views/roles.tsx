@@ -61,7 +61,6 @@ export function Roles() {
         </div>
       </div>
       <div className='grid grid-cols-3 gap-12'>
-        
         {roles.map((role, index) => (
           <CardUpdateRole data={role} key={index} />
         ))}

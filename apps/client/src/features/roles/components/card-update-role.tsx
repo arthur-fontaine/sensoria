@@ -158,8 +158,7 @@ export function CardUpdateRole(properties: object) {
               )} />
           </div>
           <div className='flex mt-8 justify-end gap-2'>
-            <Button variant="outline" className='text-green-600 
-            border-green-600' onClick={() => onSave()}>
+            <Button onClick={() => onSave()}>
             Sauvegarder
             </Button>
             <Button variant="outline" className='text-red-600 border-red-600' 

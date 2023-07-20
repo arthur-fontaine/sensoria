@@ -147,8 +147,7 @@ export function DialogAddRole() {
                 )} />
             </div>
             <div className='flex mt-8 justify-end gap-2'>
-              <Button variant="outline" className='text-green-600 
-            border-green-600' type='submit'>
+              <Button type='submit'>
             Ajouter
               </Button>
             </div>
