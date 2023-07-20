@@ -6,6 +6,8 @@ import { createContext } from './context/context'
 
 import { schema } from '.'
 
+import './services/mqtt'
+
 const API_PORT = Number.parseInt(process.env.API_PORT || '4000')
 
 const yoga = createYoga({ schema, context: createContext })
@@ -13,5 +15,5 @@ const yoga = createYoga({ schema, context: createContext })
 const apiServer = createServer(yoga as any)
 
 apiServer.listen(API_PORT, () => {
-  // console.info(`Server is running on http://localhost:${API_PORT}/graphql`)
+  console.info(`Server is running on http://localhost:${API_PORT}/graphql`)
 })

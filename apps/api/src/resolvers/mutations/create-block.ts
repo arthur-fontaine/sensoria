@@ -24,7 +24,7 @@ async function createBlock(
     name: string,
     location: [number, number],
     halls: {
-      map: Blob | { base64: string }
+      map: Buffer | { base64: string }
       label: string
       objects: { objectId: number, emplacement: [number, number] }[]
     }[],
@@ -63,9 +63,10 @@ async function createBlock(
         hallId: number
         blockId: number
         label: string
-        map: Blob
+        map: Buffer
         objects: {
           objectId: number
+          name: string
           emplacement: [number, number]
         }[]
       }[] = []
@@ -78,8 +79,8 @@ async function createBlock(
           .values({
             blockId: createdBlockId,
             label,
-            map: map instanceof Blob
-              ? Buffer.from(await map.arrayBuffer())
+            map: map instanceof Buffer
+              ? map
               : Buffer.from(map.base64, 'base64'),
           })
           .returning({
@@ -97,6 +98,7 @@ async function createBlock(
         const updatedObjects = await tx2.transaction(async (tx3) => {
           const updatedObjects: {
             objectId: number
+            name: string
             emplacement: [number, number]
           }[] = []
 
@@ -141,7 +143,6 @@ async function createBlock(
           ...createdHall === undefined ? [] : [{
             ...createdHall,
             objects: updatedObjects,
-            map: new Blob([createdHall.map]),
           }],
         )
       }

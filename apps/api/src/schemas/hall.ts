@@ -9,7 +9,7 @@ export const hallType = g.type('Hall', {
   blockId: g.int().description('The block ID'),
   hallTagId: g.int().optional().description('The hall tag ID'), // TODO
   label: g.string().description('The hall label'),
-  map: g.ref(buffer).description('The hall map'),
+  map: g.ref(() => buffer).description('The hall map'),
   block: g.ref(() => blockType).omitResolver().description('The block'),
   objects: g.ref(() => objectType).list()
     .omitResolver()

@@ -19,44 +19,7 @@ export const getObjectsQueryResolver: GetObjectsQueryResolver = (
 
           return eq(objects.objectId, args.id)
         },
-        with: {
-          measures: {
-            where: (measures, { eq }) => {
-              return eq(measures.measureType, 'battery')
-            },
-            orderBy: (measures, { desc }) => {
-              return desc(measures.timestamp)
-            },
-            limit: 1,
-          },
-        },
-
-        // cannot use `extras` yet because there is a bug in drizzle
       })
-      .then((objects) =>
-        objects.map(({ measures, ...object }) => {
-          if (measures.length > 1) {
-            throw new Error('Unexpected number of measures')
-          }
-
-          const measure = measures[0]
-
-          if (measure !== undefined && measure.measureType !== 'battery') {
-            throw new Error('Unexpected measure type (expected battery)')
-          }
-
-          const batteryLevel = measure?.value ?? 100
-
-          return {
-            ...object,
-            isAvailable: (
-              object.installationDate === null &&
-              object.hallId === null &&
-              object.emplacement === null
-            ),
-            batteryLevel: Number(batteryLevel),
-          }
-        }))
   }
 )
 
@@ -78,7 +41,7 @@ export const getMeasuresFromObjectQueryResolver:
           measures && measures.map((measure) => ({
             ...measure,
             value: Number(measure.value),
-            timestamp: measure.timestamp.getTime(),
+            timestamp: measure.timestamp.getTime().toString(),
           }))))
     }
   )
@@ -101,7 +64,7 @@ export const getLastMeasureFromObjectQueryResolver:
           measure && {
             ...measure,
             value: Number(measure.value),
-            timestamp: measure.timestamp.getTime(),
+            timestamp: measure.timestamp.getTime().toString(),
           }))
     }
   )
@@ -144,5 +107,57 @@ export const getThresholdsFromObjectQueryResolver:
             minimum: Number(threshold.valueMin),
             maximum: Number(threshold.valueMax),
           }))))
+    }
+  )
+
+type GetHallFromObjectQueryResolver = (
+  ResolverFunction<NonNullable<Resolvers['Object']['hall']>>
+)
+
+export const getHallFromObjectQueryResolver:
+  GetHallFromObjectQueryResolver = (
+    (parent, _args, _context, _info) => {
+      const hallId = parent.hallId
+
+      if (hallId === null || hallId === undefined) {
+        return
+      }
+
+      return database.query.halls
+        .findFirst({
+          where: (hall, { eq }) => eq(hall.hallId, hallId),
+        })
+    }
+  )
+
+type GetIsAvailableFromObjectQueryResolver = (
+  ResolverFunction<NonNullable<Resolvers['Object']['isAvailable']>>
+)
+
+export const getIsAvailableFromObjectQueryResolver:
+  GetIsAvailableFromObjectQueryResolver = (
+    (parent, _args, _context, _info) => {
+      return (
+        parent.installationDate === null &&
+        parent.hallId === null &&
+        parent.emplacement === null
+      )
+    }
+  )
+
+type GetBatteryLevelFromObjectQueryResolver = (
+  ResolverFunction<NonNullable<Resolvers['Object']['batteryLevel']>>
+)
+
+export const getBatteryLevelFromObjectQueryResolver:
+  GetBatteryLevelFromObjectQueryResolver = (
+    (parent, _args, _context, _info) => {
+      return database.query.measures
+        .findFirst({
+          where: (measure, { eq }) => eq(measure.sensorId, parent.objectId),
+          orderBy: (measure, { desc }) => desc(measure.timestamp),
+        })
+        .then((measure) => (
+          measure && Number(measure.value)))
     }
   )
