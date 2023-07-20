@@ -71,8 +71,8 @@ export function Login() {
   }
 
   return (
-    <div className="flex items-center justify-center 
-    place-content-center h-full">
+    <div className="top-1/2 left-1/2 -translate-x-1/2 
+    -translate-y-1/2 absolute">
 
       <Card className='p-10 '>
         <CardHeader className='p-0 pb-6'>
