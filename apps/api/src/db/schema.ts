@@ -372,7 +372,7 @@ export const usersRelations = relations(users, ({ many, one }) => ({
 
 export const roles = pgTable('roles', {
   roleId: serial('role_ID').primaryKey(),
-
+  name: varchar('name').notNull(),
   permissions: permissionEnum('permissions').array()
     .notNull().default([]),
 })

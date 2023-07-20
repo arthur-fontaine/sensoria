@@ -15,6 +15,10 @@ import {
   getObjectsQueryResolver, getTagsFromObjectQueryResolver,
   getThresholdsFromObjectQueryResolver,
 } from './resolvers/queries/get-objects'
+import { getRolesQueryResolver } from './resolvers/queries/get-roles'
+import {
+  getRoleFromUserQueryResolver, 
+  getUsersQueryResolver } from './resolvers/queries/get-users'
 import {
   sensorDataSubscribeResolver,
 } from './resolvers/subscriptions/subscribe-to-sensor-data'
@@ -23,10 +27,12 @@ import type { hallType } from './schemas/hall'
 import { measureType } from './schemas/measure'
 import { notificationsType } from './schemas/notifications'
 import { objectType } from './schemas/object'
+import { roleType } from './schemas/roles'
 import type { tagType } from './schemas/tag'
 import type { thresholdType } from './schemas/threshold'
 import type { thresholdTriggerType } from './schemas/threshold-trigger'
 import type { triggerType } from './schemas/trigger'
+import { userType } from './schemas/users'
 
 export const queryType = g.type('Query', {
   authentication: g.string()
@@ -41,6 +47,8 @@ export const queryType = g.type('Query', {
     .description('Get all objects'),
   notifications: g.ref(() => notificationsType).list()
     .description('Get all notifications'),
+  roles: g.ref(() => roleType).list().description('Get All Roles'),
+  users: g.ref(() => userType).list().description('Get all Users'),
 })
 
 export const mutationType = g.type('Mutation', {
@@ -80,6 +88,7 @@ export type Resolvers = InferResolvers<{
   Threshold: typeof thresholdType
   ThresholdTrigger: typeof thresholdTriggerType
   Trigger: typeof triggerType
+  User: typeof userType
 }, { context: Context }>
 
 const resolvers: Resolvers = {
@@ -87,6 +96,8 @@ const resolvers: Resolvers = {
     objects: getObjectsQueryResolver,
     authentication: loginQueryResolver,
     notifications: getNotificationsQueryResolver,
+    roles: getRolesQueryResolver,
+    users: getUsersQueryResolver,
   },
   Mutation: {
     createBlock: createBlockMutationResolver,
@@ -125,6 +136,9 @@ const resolvers: Resolvers = {
   },
   Trigger: {
     // object: getObjectFromTriggerQueryResolver,
+  },
+  User: {
+    role: getRoleFromUserQueryResolver,
   },
 }
 

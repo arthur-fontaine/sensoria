@@ -1,0 +1,1 @@
+ALTER TABLE "roles" ADD COLUMN "name" varchar NOT NULL;
