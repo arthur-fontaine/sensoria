@@ -3,7 +3,7 @@ import chroma from 'chroma-js'
 import { BatteryMedium } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { Button } from './ui/button'
+import { Button } from '../../../shared/components/ui/button'
 import {
   Dialog,
   DialogDescription,
@@ -12,31 +12,41 @@ import {
   DialogTrigger,
   DialogContent,
   DialogFooter,
-} from './ui/dialog'
-import { Input } from './ui/input'
-import { useQuery } from '../hooks/use-query'
+} from '../../../shared/components/ui/dialog'
+import { Input } from '../../../shared/components/ui/input'
+import { useMutation, useQuery } from '../../../shared/hooks/use-query'
 
 interface ModalProperties {
   id: number;
 }
 
-async function onSave() {
-  //modifyInput
-  return
-}
-
-async function deleteSensor(sensorId: number) {
-  return 
-}
-
-export function Modal(properties: ModalProperties) {
-
+export function ObjectModal(properties: ModalProperties) {
   const [object] = useQuery().objects({ id: properties.id })
-  const idObject = object?.objectId
+  const objectId = object?.objectId
+
+  const [deleteObject] = useMutation<undefined, number>((mutation, input) => {
+    mutation.deleteObject({ id: input })
+  })
+
+  const [editObject] = useMutation<undefined, {
+    id: number,
+    thresholds: {
+      thresholdId: number,
+      minimum?: number | undefined,
+      maximum?: number | undefined,
+    }[],
+  }>((mutation, input) => {
+    mutation.editObject({
+      object: {
+        objectId: input.id,
+        thresholds: input.thresholds,
+      },
+    })
+  })
 
   const [modifyInput, setModifyInput] = useState<Record<number, {
-    minimum?: number,
-    maximum?: number
+    minimum?: number | undefined,
+    maximum?: number | undefined,
   }>>({})
 
   const handleChange =
@@ -53,6 +63,23 @@ export function Modal(properties: ModalProperties) {
         },
       }))
     }, [])
+
+  const handleSave = useCallback(() => {
+    if (objectId === undefined) {
+      return
+    }
+
+    editObject({
+      args: {
+        id: objectId,
+        thresholds: Object.entries(modifyInput).map(([thresholdId, value]) => ({
+          thresholdId: Number.parseInt(thresholdId),
+          minimum: value.minimum,
+          maximum: value.maximum,
+        })),
+      },
+    })
+  }, [editObject, modifyInput, objectId])
 
   const cursorProgress = useMemo(() => {
     const { minimum, maximum } = Object.values(modifyInput)[0] ?? {}
@@ -96,8 +123,8 @@ export function Modal(properties: ModalProperties) {
           return threshold.thresholdId === undefined
             ? []
             : [[threshold.thresholdId, {
-              minimum: threshold.minimum,
-              maximum: threshold.maximum,
+              minimum: threshold.minimum ?? undefined,
+              maximum: threshold.maximum ?? undefined,
             }]]
         })),
       )
@@ -131,8 +158,8 @@ export function Modal(properties: ModalProperties) {
              via-orange-500 to-red-500 ...">
               <div className='relative w-full translate-y-full '>
                 <div>
-                  <svg width="16" height="10" 
-                    viewBox="0 0 16 10" 
+                  <svg width="16" height="10"
+                    viewBox="0 0 16 10"
                     className='relative -translate-x-1/2' style={{
                       left: `${cursorProgress}%`,
                     }} fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -140,7 +167,7 @@ export function Modal(properties: ModalProperties) {
                       d="M14.2929 7.29289L8.70711 1.70711C8.31658
                      1.31658 7.68342 1.31658 7.29289 1.70711L1.70711 
                      7.29289C1.07714 7.92286 1.52331 9 2.41421 9H13.
-                     5858C14.4767 9 14.9229 7.92286 14.2929 7.29289Z" 
+                     5858C14.4767 9 14.9229 7.92286 14.2929 7.29289Z"
                       fill={`${changeColor}88`}
                       stroke={
                         typeof changeColor === 'number'
@@ -180,26 +207,41 @@ export function Modal(properties: ModalProperties) {
             <>
               <div className="flex items-center gap-3">
                 <Label className='text-sm font-semibold'>Minimum</Label>
-                <Input placeholder="Minimum" type='number'
+                <Input
+                  placeholder="Minimum"
+                  type='number'
                   onChange={(event) =>
                     handleChange(
                       fields.thresholdId,
                       'minimum',
                       event.target.value,
-                    )}
-                  defaultValue={fields.minimum}></Input>
+                    )
+                  }
+                  {
+                    ...fields.minimum === undefined || fields.minimum === null
+                      ? {}
+                      : { defaultValue: fields.minimum.toString() }
+                  }
+                />
               </div>
               <div className="flex items-center gap-3">
                 <Label className='text-sm font-semibold'>Maximum</Label>
-                <Input placeholder="Maximum"
+                <Input
+                  placeholder="Maximum"
                   type='number'
                   onChange={(event) =>
                     handleChange(
                       fields.thresholdId,
                       'maximum',
                       event.target.value,
-                    )}
-                  defaultValue={fields.maximum}></Input>
+                    )
+                  }
+                  {
+                    ...fields.maximum === undefined || fields.maximum === null
+                      ? {}
+                      : { defaultValue: fields.maximum.toString() }
+                  }
+                />
               </div>
             </>
           ))}
@@ -207,7 +249,9 @@ export function Modal(properties: ModalProperties) {
         </div>
         <DialogFooter className='pt-8'>
           <Button
-            onClick={() => idObject && deleteSensor(idObject)}
+            onClick={() => objectId && deleteObject({
+              args: objectId,
+            })}
             className="text-red-500 bg-white border border-red-500
             cursor-pointer hover:text-white hover:bg-red-500"
             type="submit"
@@ -218,7 +262,7 @@ export function Modal(properties: ModalProperties) {
             className="text-white bg-black cursor-pointer hover:text-blac
             hover:bg-white hover:border hover:border-black"
             type="submit"
-            onClick={onSave}
+            onClick={handleSave}
           >
             Sauvegarder
           </Button>

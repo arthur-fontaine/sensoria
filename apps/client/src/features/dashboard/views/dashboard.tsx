@@ -1,4 +1,4 @@
-import { Modal } from '@/shared/components/modal'
+import { ObjectModal } from '@/features/dashboard/components/object-modal'
 import { Label } from '@/shared/components/ui/label'
 
 export function Dashboard() {
@@ -6,7 +6,7 @@ export function Dashboard() {
   return (
     <>
       <Label>Dashboard</Label> <br />
-      <Modal id={1} />
+      <ObjectModal id={1} />
     </>
   )
 }

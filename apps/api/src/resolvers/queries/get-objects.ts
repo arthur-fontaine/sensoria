@@ -41,7 +41,7 @@ export const getMeasuresFromObjectQueryResolver:
           measures && measures.map((measure) => ({
             ...measure,
             value: Number(measure.value),
-            timestamp: measure.timestamp.getTime(),
+            timestamp: measure.timestamp.getTime().toString(),
           }))))
     }
   )
@@ -64,7 +64,7 @@ export const getLastMeasureFromObjectQueryResolver:
           measure && {
             ...measure,
             value: Number(measure.value),
-            timestamp: measure.timestamp.getTime(),
+            timestamp: measure.timestamp.getTime().toString(),
           }))
     }
   )

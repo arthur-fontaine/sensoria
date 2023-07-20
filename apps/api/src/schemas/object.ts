@@ -5,7 +5,7 @@ import { measureType } from './measure'
 import { coordinates } from './scalar/coordinates'
 import { dateType } from './scalar/date'
 import { tagType } from './tag'
-import { thresholdType } from './threshold'
+import { thresholdInputType, thresholdType } from './threshold'
 
 export const objectType = g.type('Object', {
   objectId: g.int().description('The object id'),
@@ -45,5 +45,7 @@ export const objectType = g.type('Object', {
 export const objectInputType = g.inputType('ObjectInput', {
   objectId: g.int().description('The object id'),
   emplacement: g.ref(() => coordinates)
+    .optional()
     .description('The object emplacement'),
+  thresholds: g.ref(() => thresholdInputType).list(),
 })

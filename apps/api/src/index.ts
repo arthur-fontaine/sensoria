@@ -3,6 +3,10 @@ import type { YogaInitialContext } from 'graphql-yoga'
 
 import { createBlockMutationResolver } from './resolvers/mutations/create-block'
 import {
+  deleteObjectMutationResolver,
+} from './resolvers/mutations/delete-object'
+import { editObjectMutationResolver } from './resolvers/mutations/edit-object'
+import {
   modifyPasswordMutationResolver,
 } from './resolvers/mutations/modify-password'
 import { loginQueryResolver } from './resolvers/queries/authentication'
@@ -22,7 +26,7 @@ import {
 import { blockInputType, blockType } from './schemas/block'
 import type { hallType } from './schemas/hall'
 import { measureType } from './schemas/measure'
-import { objectType } from './schemas/object'
+import { objectInputType, objectType } from './schemas/object'
 import type { tagType } from './schemas/tag'
 import type { thresholdType } from './schemas/threshold'
 import type { thresholdTriggerType } from './schemas/threshold-trigger'
@@ -54,6 +58,16 @@ export const mutationType = g.type('Mutation', {
       email: g.string().required(),
     })
     .description('Create a new block'),
+  editObject: g.ref(() => objectType)
+    .args({
+      object: g.ref(() => objectInputType).required(),
+    })
+    .description('Edit an object'),
+  deleteObject: g.boolean()
+    .args({
+      id: g.int().required().description('The id of the object'),
+    })
+    .description('Delete an object by id'),
 })
 
 export const subscriptionType = g.type('Subscription', {
@@ -87,6 +101,8 @@ const resolvers: Resolvers = {
   Mutation: {
     createBlock: createBlockMutationResolver,
     modifyPassword: modifyPasswordMutationResolver,
+    editObject: editObjectMutationResolver,
+    deleteObject: deleteObjectMutationResolver,
   },
   Subscription: {
     sensorData: {
