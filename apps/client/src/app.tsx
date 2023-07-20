@@ -4,6 +4,7 @@ import { Dashboard } from '@/features/dashboard/views/dashboard'
 import { Login } from '@/features/login/views/login'
 import { Updatepassword } from '@/features/login/views/updatepassword'
 import { Onboarding } from '@/features/onboarding/views/onboarding'
+import { Roles } from '@/features/roles/views/roles'
 import { Tag } from '@/features/tag/views/tag'
 import { Users } from '@/features/users/views/users'
 import { useRoute } from '@/shared/hooks/use-route'
@@ -17,6 +18,7 @@ export function App() {
     'Dashboard',
     'Users',
     'Tag',
+    'Roles',
   ])
 
   const token = sessionStorage.getItem('token') ?? localStorage.getItem('token')
@@ -46,6 +48,9 @@ export function App() {
     }
     case 'Tag': {
       return <Tag />
+    }
+    case 'Roles': {
+      return <Roles />
     }
 
     default: {
