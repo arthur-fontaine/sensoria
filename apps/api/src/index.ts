@@ -15,6 +15,7 @@ import {
   getObjectsQueryResolver, getTagsFromObjectQueryResolver,
   getThresholdsFromObjectQueryResolver,
 } from './resolvers/queries/get-objects'
+import { getRolesQueryResolver } from './resolvers/queries/get-roles'
 import {
   sensorDataSubscribeResolver,
 } from './resolvers/subscriptions/subscribe-to-sensor-data'
@@ -23,6 +24,7 @@ import type { hallType } from './schemas/hall'
 import { measureType } from './schemas/measure'
 import { notificationsType } from './schemas/notifications'
 import { objectType } from './schemas/object'
+import { roleType } from './schemas/roles'
 import type { tagType } from './schemas/tag'
 import type { thresholdType } from './schemas/threshold'
 import type { thresholdTriggerType } from './schemas/threshold-trigger'
@@ -41,6 +43,8 @@ export const queryType = g.type('Query', {
     .description('Get all objects'),
   notifications: g.ref(() => notificationsType).list()
     .description('Get all notifications'),
+  roles: g.ref(() => roleType).list()
+    .description('Get all roles'),
 })
 
 export const mutationType = g.type('Mutation', {
@@ -87,6 +91,7 @@ const resolvers: Resolvers = {
     objects: getObjectsQueryResolver,
     authentication: loginQueryResolver,
     notifications: getNotificationsQueryResolver,
+    roles: getRolesQueryResolver,
   },
   Mutation: {
     createBlock: createBlockMutationResolver,

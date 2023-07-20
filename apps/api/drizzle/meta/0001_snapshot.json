@@ -1,0 +1,1036 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "id": "9b14cce9-cc5b-452d-9f3c-dfd18ef752fb",
+  "prevId": "66aa722b-60c8-4616-a06d-54dc875af175",
+  "tables": {
+    "blocks": {
+      "name": "blocks",
+      "schema": "",
+      "columns": {
+        "block_ID": {
+          "name": "block_ID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "location": {
+          "name": "location",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {}
+    },
+    "halls": {
+      "name": "halls",
+      "schema": "",
+      "columns": {
+        "hall_ID": {
+          "name": "hall_ID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "label": {
+          "name": "label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "map": {
+          "name": "map",
+          "type": "bytea",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "block_ID": {
+          "name": "block_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "halls_block_ID_blocks_block_ID_fk": {
+          "name": "halls_block_ID_blocks_block_ID_fk",
+          "tableFrom": "halls",
+          "tableTo": "blocks",
+          "columnsFrom": [
+            "block_ID"
+          ],
+          "columnsTo": [
+            "block_ID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {}
+    },
+    "invitations": {
+      "name": "invitations",
+      "schema": "",
+      "columns": {
+        "invitation_ID": {
+          "name": "invitation_ID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "maximum_date": {
+          "name": "maximum_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_ID": {
+          "name": "user_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {}
+    },
+    "measures": {
+      "name": "measures",
+      "schema": "",
+      "columns": {
+        "measure_ID": {
+          "name": "measure_ID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "measure_type": {
+          "name": "measure_type",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sensor_ID": {
+          "name": "sensor_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "measures_sensor_ID_objects_object_ID_fk": {
+          "name": "measures_sensor_ID_objects_object_ID_fk",
+          "tableFrom": "measures",
+          "tableTo": "objects",
+          "columnsFrom": [
+            "sensor_ID"
+          ],
+          "columnsTo": [
+            "object_ID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {}
+    },
+    "notifications": {
+      "name": "notifications",
+      "schema": "",
+      "columns": {
+        "notification_ID": {
+          "name": "notification_ID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "message": {
+          "name": "message",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "importance": {
+          "name": "importance",
+          "type": "importance",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "measure_ID": {
+          "name": "measure_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "notifications_measure_ID_measures_measure_ID_fk": {
+          "name": "notifications_measure_ID_measures_measure_ID_fk",
+          "tableFrom": "notifications",
+          "tableTo": "measures",
+          "columnsFrom": [
+            "measure_ID"
+          ],
+          "columnsTo": [
+            "measure_ID"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {}
+    },
+    "objectConfigs": {
+      "name": "objectConfigs",
+      "schema": "",
+      "columns": {
+        "object_config_ID": {
+          "name": "object_config_ID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "config": {
+          "name": "config",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {}
+    },
+    "objectTypes": {
+      "name": "objectTypes",
+      "schema": "",
+      "columns": {
+        "object_type_ID": {
+          "name": "object_type_ID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {}
+    },
+    "objects": {
+      "name": "objects",
+      "schema": "",
+      "columns": {
+        "object_ID": {
+          "name": "object_ID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "icon_name": {
+          "name": "icon_name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "maker": {
+          "name": "maker",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "serial_number": {
+          "name": "serial_number",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "installation_date": {
+          "name": "installation_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "emplacement": {
+          "name": "emplacement",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hall_ID": {
+          "name": "hall_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "object_type_ID": {
+          "name": "object_type_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "block_ID": {
+          "name": "block_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "object_config_ID": {
+          "name": "object_config_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "objects_hall_ID_halls_hall_ID_fk": {
+          "name": "objects_hall_ID_halls_hall_ID_fk",
+          "tableFrom": "objects",
+          "tableTo": "halls",
+          "columnsFrom": [
+            "hall_ID"
+          ],
+          "columnsTo": [
+            "hall_ID"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "objects_object_type_ID_objectTypes_object_type_ID_fk": {
+          "name": "objects_object_type_ID_objectTypes_object_type_ID_fk",
+          "tableFrom": "objects",
+          "tableTo": "objectTypes",
+          "columnsFrom": [
+            "object_type_ID"
+          ],
+          "columnsTo": [
+            "object_type_ID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "objects_block_ID_blocks_block_ID_fk": {
+          "name": "objects_block_ID_blocks_block_ID_fk",
+          "tableFrom": "objects",
+          "tableTo": "blocks",
+          "columnsFrom": [
+            "block_ID"
+          ],
+          "columnsTo": [
+            "block_ID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "objects_object_config_ID_objectConfigs_object_config_ID_fk": {
+          "name": "objects_object_config_ID_objectConfigs_object_config_ID_fk",
+          "tableFrom": "objects",
+          "tableTo": "objectConfigs",
+          "columnsFrom": [
+            "object_config_ID"
+          ],
+          "columnsTo": [
+            "object_config_ID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {}
+    },
+    "objectsToTags": {
+      "name": "objectsToTags",
+      "schema": "",
+      "columns": {
+        "object_ID": {
+          "name": "object_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tag_ID": {
+          "name": "tag_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "objectsToTags_object_ID_objects_object_ID_fk": {
+          "name": "objectsToTags_object_ID_objects_object_ID_fk",
+          "tableFrom": "objectsToTags",
+          "tableTo": "objects",
+          "columnsFrom": [
+            "object_ID"
+          ],
+          "columnsTo": [
+            "object_ID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "objectsToTags_tag_ID_tags_tag_ID_fk": {
+          "name": "objectsToTags_tag_ID_tags_tag_ID_fk",
+          "tableFrom": "objectsToTags",
+          "tableTo": "tags",
+          "columnsFrom": [
+            "tag_ID"
+          ],
+          "columnsTo": [
+            "tag_ID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "objectsToTags_object_ID_tag_ID": {
+          "name": "objectsToTags_object_ID_tag_ID",
+          "columns": [
+            "object_ID",
+            "tag_ID"
+          ]
+        }
+      }
+    },
+    "onboardingRating": {
+      "name": "onboardingRating",
+      "schema": "",
+      "columns": {
+        "onboarding_rating_id": {
+          "name": "onboarding_rating_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "rate": {
+          "name": "rate",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "comment": {
+          "name": "comment",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_ID": {
+          "name": "user_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "onboardingRating_user_ID_users_user_ID_fk": {
+          "name": "onboardingRating_user_ID_users_user_ID_fk",
+          "tableFrom": "onboardingRating",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_ID"
+          ],
+          "columnsTo": [
+            "user_ID"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {}
+    },
+    "roles": {
+      "name": "roles",
+      "schema": "",
+      "columns": {
+        "role_ID": {
+          "name": "role_ID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "permissions": {
+          "name": "permissions",
+          "type": "permission[]",
+          "primaryKey": false,
+          "notNull": true,
+          "default": []
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {}
+    },
+    "rolesToAccesses": {
+      "name": "rolesToAccesses",
+      "schema": "",
+      "columns": {
+        "role_access_ID": {
+          "name": "role_access_ID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "role_ID": {
+          "name": "role_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "have_access": {
+          "name": "have_access",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hall_ID": {
+          "name": "hall_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "rolesToAccesses_role_ID_roles_role_ID_fk": {
+          "name": "rolesToAccesses_role_ID_roles_role_ID_fk",
+          "tableFrom": "rolesToAccesses",
+          "tableTo": "roles",
+          "columnsFrom": [
+            "role_ID"
+          ],
+          "columnsTo": [
+            "role_ID"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "rolesToAccesses_hall_ID_halls_hall_ID_fk": {
+          "name": "rolesToAccesses_hall_ID_halls_hall_ID_fk",
+          "tableFrom": "rolesToAccesses",
+          "tableTo": "halls",
+          "columnsFrom": [
+            "hall_ID"
+          ],
+          "columnsTo": [
+            "hall_ID"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {}
+    },
+    "tagConfigs": {
+      "name": "tagConfigs",
+      "schema": "",
+      "columns": {
+        "tag_config_ID": {
+          "name": "tag_config_ID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "object_type_ID": {
+          "name": "object_type_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "object_config_ID": {
+          "name": "object_config_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tag_ID": {
+          "name": "tag_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "tagConfigs_object_type_ID_objectTypes_object_type_ID_fk": {
+          "name": "tagConfigs_object_type_ID_objectTypes_object_type_ID_fk",
+          "tableFrom": "tagConfigs",
+          "tableTo": "objectTypes",
+          "columnsFrom": [
+            "object_type_ID"
+          ],
+          "columnsTo": [
+            "object_type_ID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "tagConfigs_object_config_ID_objectConfigs_object_config_ID_fk": {
+          "name": "tagConfigs_object_config_ID_objectConfigs_object_config_ID_fk",
+          "tableFrom": "tagConfigs",
+          "tableTo": "objectConfigs",
+          "columnsFrom": [
+            "object_config_ID"
+          ],
+          "columnsTo": [
+            "object_config_ID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "tagConfigs_tag_ID_tags_tag_ID_fk": {
+          "name": "tagConfigs_tag_ID_tags_tag_ID_fk",
+          "tableFrom": "tagConfigs",
+          "tableTo": "tags",
+          "columnsFrom": [
+            "tag_ID"
+          ],
+          "columnsTo": [
+            "tag_ID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {}
+    },
+    "tags": {
+      "name": "tags",
+      "schema": "",
+      "columns": {
+        "tag_ID": {
+          "name": "tag_ID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {}
+    },
+    "thresholds": {
+      "name": "thresholds",
+      "schema": "",
+      "columns": {
+        "threshold_ID": {
+          "name": "threshold_ID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value_min": {
+          "name": "value_min",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "value_max": {
+          "name": "value_max",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sensor_ID": {
+          "name": "sensor_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "thresholds_sensor_ID_objects_object_ID_fk": {
+          "name": "thresholds_sensor_ID_objects_object_ID_fk",
+          "tableFrom": "thresholds",
+          "tableTo": "objects",
+          "columnsFrom": [
+            "sensor_ID"
+          ],
+          "columnsTo": [
+            "object_ID"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {}
+    },
+    "thresholdsTriggers": {
+      "name": "thresholdsTriggers",
+      "schema": "",
+      "columns": {
+        "threshold_trigger_ID": {
+          "name": "threshold_trigger_ID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "trigger_event": {
+          "name": "trigger_event",
+          "type": "triggerEvent",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "threshold_ID": {
+          "name": "threshold_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "trigger_ID": {
+          "name": "trigger_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "thresholdsTriggers_threshold_ID_thresholds_threshold_ID_fk": {
+          "name": "thresholdsTriggers_threshold_ID_thresholds_threshold_ID_fk",
+          "tableFrom": "thresholdsTriggers",
+          "tableTo": "thresholds",
+          "columnsFrom": [
+            "threshold_ID"
+          ],
+          "columnsTo": [
+            "threshold_ID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "thresholdsTriggers_trigger_ID_triggers_trigger_ID_fk": {
+          "name": "thresholdsTriggers_trigger_ID_triggers_trigger_ID_fk",
+          "tableFrom": "thresholdsTriggers",
+          "tableTo": "triggers",
+          "columnsFrom": [
+            "trigger_ID"
+          ],
+          "columnsTo": [
+            "trigger_ID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {}
+    },
+    "triggers": {
+      "name": "triggers",
+      "schema": "",
+      "columns": {
+        "trigger_ID": {
+          "name": "trigger_ID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "new_state": {
+          "name": "new_state",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "object_ID": {
+          "name": "object_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "triggers_object_ID_objects_object_ID_fk": {
+          "name": "triggers_object_ID_objects_object_ID_fk",
+          "tableFrom": "triggers",
+          "tableTo": "objects",
+          "columnsFrom": [
+            "object_ID"
+          ],
+          "columnsTo": [
+            "object_ID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {}
+    },
+    "users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "user_ID": {
+          "name": "user_ID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "password": {
+          "name": "password",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "joined_at": {
+          "name": "joined_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "permissions": {
+          "name": "permissions",
+          "type": "permission[]",
+          "primaryKey": false,
+          "notNull": true,
+          "default": []
+        },
+        "block_ID": {
+          "name": "block_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "invitation_ID": {
+          "name": "invitation_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "role_ID": {
+          "name": "role_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "users_block_ID_blocks_block_ID_fk": {
+          "name": "users_block_ID_blocks_block_ID_fk",
+          "tableFrom": "users",
+          "tableTo": "blocks",
+          "columnsFrom": [
+            "block_ID"
+          ],
+          "columnsTo": [
+            "block_ID"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "users_invitation_ID_invitations_invitation_ID_fk": {
+          "name": "users_invitation_ID_invitations_invitation_ID_fk",
+          "tableFrom": "users",
+          "tableTo": "invitations",
+          "columnsFrom": [
+            "invitation_ID"
+          ],
+          "columnsTo": [
+            "invitation_ID"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "users_role_ID_roles_role_ID_fk": {
+          "name": "users_role_ID_roles_role_ID_fk",
+          "tableFrom": "users",
+          "tableTo": "roles",
+          "columnsFrom": [
+            "role_ID"
+          ],
+          "columnsTo": [
+            "role_ID"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {}
+    },
+    "usersToAccesses": {
+      "name": "usersToAccesses",
+      "schema": "",
+      "columns": {
+        "user_access_ID": {
+          "name": "user_access_ID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_ID": {
+          "name": "user_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "have_access": {
+          "name": "have_access",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hall_ID": {
+          "name": "hall_ID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "usersToAccesses_user_ID_users_user_ID_fk": {
+          "name": "usersToAccesses_user_ID_users_user_ID_fk",
+          "tableFrom": "usersToAccesses",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_ID"
+          ],
+          "columnsTo": [
+            "user_ID"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "usersToAccesses_hall_ID_halls_hall_ID_fk": {
+          "name": "usersToAccesses_hall_ID_halls_hall_ID_fk",
+          "tableFrom": "usersToAccesses",
+          "tableTo": "halls",
+          "columnsFrom": [
+            "hall_ID"
+          ],
+          "columnsTo": [
+            "hall_ID"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {}
+    }
+  },
+  "enums": {
+    "importance": {
+      "name": "importance",
+      "values": {
+        "high": "high",
+        "medium": "medium",
+        "normal": "normal",
+        "post_high": "post_high"
+      }
+    },
+    "permission": {
+      "name": "permission",
+      "values": {
+        "view_rooms": "view_rooms",
+        "manage_rooms": "manage_rooms",
+        "add_rooms": "add_rooms",
+        "view_sensors": "view_sensors",
+        "manage_sensors": "manage_sensors",
+        "add_sensors": "add_sensors"
+      }
+    },
+    "triggerEvent": {
+      "name": "triggerEvent",
+      "values": {
+        "lessThanMin": "lessThanMin",
+        "greaterThanMax": "greaterThanMax"
+      }
+    }
+  },
+  "schemas": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  }
+}
