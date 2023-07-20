@@ -6,25 +6,29 @@ import jwt from 'jsonwebtoken'
 import type { Resolvers } from '../..'
 import { database } from '../../db'
 import { users } from '../../db/schema'
+import type { ResolverFunction } from '../../types/resolver-functions'
 
 let JWT_SECRET = ''
 
 if (typeof window === 'undefined') {
   dotenv.config()
-  
+
   if (process.env.JWT_SECRET === undefined) {
     throw new Error('JWT_SECRET is undefined')
   }
-  
+
   JWT_SECRET = process.env.JWT_SECRET
 }
 
-export const modifyPasswordMutationResolver: NonNullable<
-  Resolvers['Mutation']['modifyPassword']
-> = async (_parent, args) => {
-  await modifyPassword(args.token, args.password, args.newPassword)
-  return true
-}
+type ModifyPasswordMutationResolver = (
+  ResolverFunction<NonNullable<Resolvers['Mutation']['modifyPassword']>>
+)
+
+export const modifyPasswordMutationResolver: ModifyPasswordMutationResolver =
+  async (_parent, args) => {
+    await modifyPassword(args.token, args.password, args.newPassword)
+    return true
+  }
 
 async function modifyPassword(
   token: string,
@@ -43,7 +47,7 @@ async function modifyPassword(
       userPassword: user?.password,
     }))
 
-  if (userPassword === undefined || userPassword === null ) {
+  if (userPassword === undefined || userPassword === null) {
     throw new Error('User not found')
   }
   const validPassword = await bcrypt.compare(password, userPassword)
@@ -54,7 +58,7 @@ async function modifyPassword(
 
   await database
     .update(users)
-    .set({password : await bcrypt.hash(newPassword, 10)})
+    .set({ password: await bcrypt.hash(newPassword, 10) })
     .where(eq(users.email, email))
 }
 
