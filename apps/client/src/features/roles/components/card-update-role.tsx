@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { roles } from '@sensoria/api/src/db/schema'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
@@ -49,13 +48,13 @@ export function CardUpdateRole(properties: object) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      name: data.label,
-      seerooms: data.permission.seerooms,
-      managerooms: data.permission.managerooms,
-      addrooms: data.permission.addrooms,
-      seesensors: data.permission.seesensors,
-      managesensors: data.permission.managesensors,
-      addsensors: data.permission.addsensor,
+      name: data.name,
+      seerooms: data.permissions.includes('view_rooms'),
+      managerooms: data.permissions.includes('manage_rooms'),
+      addrooms: data.permissions.includes('add_rooms'),
+      seesensors: data.permissions.includes('view_sensors'),
+      managesensors: data.permissions.includes('manage_sensors'),
+      addsensors: data.permissions.includes('add_sensors'),
     },
   })
 
