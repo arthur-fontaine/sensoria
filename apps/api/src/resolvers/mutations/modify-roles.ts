@@ -2,20 +2,24 @@ import { eq } from 'drizzle-orm'
 
 import type { Resolvers } from '../..'
 import { database } from '../../db'
-import { onboardingRating, users, usersToAccesses } from '../../db/schema'
+import { users, roles } from '../../db/schema'
 import type { ResolverFunction } from '../../types/resolver-functions'
 
-type DeleteUserMutationResolver = (
-  ResolverFunction<NonNullable<Resolvers['Mutation']['deleteUser']>>
+type ModifyRoledMutationResolver = (
+  ResolverFunction<NonNullable<Resolvers['Mutation']['modifyRole']>>
 )
 
-export const deleteUserMutationResolver: DeleteUserMutationResolver =
+export const modifyRoleMutationResolver: ModifyRoledMutationResolver =
   async (_parent, args) => {
-    await deleteUser(args.userId)
+    await modifyRole(args.userId, args.newRole)
     return true
   }
 
-async function deleteUser(userId: number) {
+async function modifyRole(
+  userId: number,
+  newRole: string,
+) {
+
   const user = await database
     .select({ userId: users.userId })
     .from(users)
@@ -26,16 +30,19 @@ async function deleteUser(userId: number) {
     throw new Error('User not found')
   }
 
-  await database
-    .delete(usersToAccesses)
-    .where(eq(usersToAccesses.userId, userId))
+  const role = await database
+    .select({ roleId: roles.roleId})
+    .from(roles)
+    .where(eq(roles.name, newRole))
+    .then(([role]) => role)
+
+  if (!role) {
+    throw new Error('Role not found')
+  }
 
   await database
-    .delete(onboardingRating)
-    .where(eq(onboardingRating.userId, userId))
-
-  await database
-    .delete(users)
+    .update(users)
+    .set({ roleId: role.roleId })
     .where(eq(users.userId, userId))
 }
 

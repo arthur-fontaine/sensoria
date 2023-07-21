@@ -7,6 +7,7 @@ import { deleteUserMutationResolver } from './resolvers/mutations/delete-user'
 import {
   modifyPasswordMutationResolver,
 } from './resolvers/mutations/modify-password'
+import { modifyRoleMutationResolver } from './resolvers/mutations/modify-roles'
 import { loginQueryResolver } from './resolvers/queries/authentication'
 import {
   getMeasureFromNotificationsQueryResolver,
@@ -59,6 +60,11 @@ export const mutationType = g.type('Mutation', {
       token: g.string(),
       password: g.string(),
       newPassword: g.string(),
+    }),
+  modifyRole: g.boolean()
+    .args({
+      userId: g.int(),
+      newRole: g.string(),
     }),
   deleteUser: g.boolean()
     .args({
@@ -115,6 +121,7 @@ const resolvers: Resolvers = {
     modifyPassword: modifyPasswordMutationResolver,
     deleteUser: deleteUserMutationResolver,
     addUser: addUserMutationResolver,
+    modifyRole: modifyRoleMutationResolver,
   },
   Subscription: {
     sensorData: sensorDataSubscribeResolver,
