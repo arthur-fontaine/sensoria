@@ -20,6 +20,19 @@ export const { useMutation, useQuery, resolve } = createClient<ClientTypes>({
   generatedSchema: createGeneratedSchema(schema),
   scalarsEnumsHash: createScalarsEnumsHash(schema),
   url: `http://localhost:${API_PORT}/graphql`,
+  headers: {
+    get Authorization() {
+      const token = (
+        localStorage.getItem('token') ?? sessionStorage.getItem('token')
+      )
+
+      if (token === null) {
+        return ''
+      }
+
+      return `Bearer ${token}`
+    },
+  },
 })
 
 // Needed for the babel plugin

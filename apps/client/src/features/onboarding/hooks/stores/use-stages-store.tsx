@@ -3,11 +3,13 @@ import { create } from 'zustand'
 import type { Stage } from '../../types/stage'
 import { createStage } from '../../utils/create-stage'
 
+import type { DeepPartial } from '@/shared/types/deep-partial'
+
 type StagesStore = {
   stages: Stage[],
   currentStageIndex: number,
   createStage: (newStage?: Partial<Stage>, autoSelect?: boolean) => void,
-  updateStage: (index: number, newStage: Partial<Stage>) => void,
+  updateStage: (index: number, newStage: DeepPartial<Stage>) => void,
   deleteStage: (index: number) => void,
   selectStage: (index: number) => void,
 }
@@ -39,7 +41,7 @@ export const useStagesStore = create<StagesStore>((set) => ({
       objects: [
         ...toUpdateStage.objects.filter(
           (object) => !updatedStage.objects?.some(
-            (updatedObject) => updatedObject.objectId === object.objectId,
+            (updatedObject) => updatedObject?.objectId === object.objectId,
           ),
         ),
         ...updatedStage.objects ?? [],

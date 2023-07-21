@@ -7,13 +7,9 @@ import {
 } from 'drizzle-orm/pg-core'
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
 import { createInsertSchema } from 'drizzle-zod'
-import postgres from 'postgres'
 import { z } from 'zod'
 import { createFixture, Customization } from 'zod-fixture'
 
-import {
-  POSTGRES_DB, databaseConnectionString,
-} from '../src/db/get-database-connection-string'
 import * as schemas from '../src/db/schema'
 
 // Drizzle Symbols
@@ -33,7 +29,7 @@ async function seed(
   reset = false,
 ) {
   if (reset) {
-    await resetDatabase()
+    await import('./reset-database')
   }
 
   // Need to import this after resetDatabase() because it will drop the database
@@ -51,21 +47,6 @@ async function seed(
       await generateMock(database, schema)
     }
   }
-}
-
-async function resetDatabase() {
-  // We need to connect to the postgres database because we can't drop the
-  // database that we are currently connected to.
-  const client = postgres(
-    `${databaseConnectionString.split('/').slice(0, -1).join('/')}/postgres`,
-  )
-
-  await client.unsafe(`DROP DATABASE IF EXISTS ${POSTGRES_DB} WITH (FORCE);`)
-  await client.unsafe(`CREATE DATABASE ${POSTGRES_DB};`)
-
-  // We re-run the migrations after resetting the database because the
-  // migrations will create the tables and constraints.
-  await import('./migrate')
 }
 
 async function generateMock(

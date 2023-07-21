@@ -20,7 +20,13 @@ if (typeof window === 'undefined') {
   if (POSTGRES_PASSWORD === undefined) {
     throw new Error('POSTGRES_PASSWORD is not defined')
   }
+  if (POSTGRES_PASSWORD === undefined) {
+    throw new Error('POSTGRES_PASSWORD is not defined')
+  }
 
+  if (POSTGRES_PORT === undefined) {
+    throw new Error('POSTGRES_PORT is not defined')
+  }
   if (POSTGRES_PORT === undefined) {
     throw new Error('POSTGRES_PORT is not defined')
   }

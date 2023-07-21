@@ -45,7 +45,7 @@ export const UUID_REGEX = (
   /^[\dA-Fa-f]{8}(?:\b-[\dA-Fa-f]{4}){3}\b-[\dA-Fa-f]{12}$/
 )
 
-export const SENSOR_DATA_TOPIC_REGEX = TypedRegEx(`^${_MQTT_BASE_TOPIC}\
+export const SENSOR_DATA_TOPIC_REGEX = TypedRegEx(`^${MQTT_BASE_TOPIC}\
 /packet/(?<gateway_id>${UUID_REGEX.source.slice(1, -1)})\
 /(?<node_id>${UUID_REGEX.source.slice(1, -1)})/([0-9]+)$`)
 

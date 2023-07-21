@@ -4,8 +4,8 @@ import {
 } from '../../services/mqtt/utils/sensor-data-event'
 
 type GetSensorDataSubscriptionResolver = NonNullable<
-  NonNullable<Resolvers['Subscription']['sensorData']>['subscribe']
->
+  Resolvers['Subscription']['sensorData']
+>['subscribe']
 
 export const sensorDataSubscribeResolver: GetSensorDataSubscriptionResolver = (
   async function* (_parent, args, _context, _info) {
@@ -13,9 +13,7 @@ export const sensorDataSubscribeResolver: GetSensorDataSubscriptionResolver = (
       blockId: args.blockId ?? undefined,
       sensorId: args.sensorId ?? undefined,
     })) {
-      yield {
-        sensorData: data,
-      }
+      yield data as any // FIXME: Remove this cast
     }
   }
 )
@@ -29,7 +27,7 @@ async function* getSensorData(args: {
   let dataToSend: SensorData[] = []
 
   sensorDataEvent.addEventListener('sensor-data', (data) => {
-    if (data.sensor_id !== args.sensorId) {
+    if (args.sensorId !== undefined && data.sensor_id !== args.sensorId) {
       return
     }
 
@@ -39,11 +37,17 @@ async function* getSensorData(args: {
 
   for await (const _ of infiniteLoop()) {
     for (const data of dataToSend) {
-      yield {
-        measureType: data.measure_type,
-        value: data.data.value,
-        timestamp: data.tx_time_ms_epoch,
-        sensor: {},
+      if (typeof data.data !== 'object' || data.data === null) {
+        continue
+      }
+
+      for (const [key, value] of Object.entries(data.data)) {
+        yield {
+          sensorId: data.sensor_id,
+          measureType: key,
+          value,
+          timestamp: (data.tx_time_ms_epoch * 1000).toString(),
+        }
       }
     }
 

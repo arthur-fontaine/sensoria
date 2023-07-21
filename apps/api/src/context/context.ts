@@ -11,11 +11,11 @@ if (process.env.JWT_SECRET === undefined) {
 const JWT_SECRET = process.env.JWT_SECRET
 
 export async function createContext(initialContext: YogaInitialContext) {
-  const header = initialContext.request.headers.get('authorization')
+  const authorization = initialContext.request.headers.get('authorization')
 
   let userId: number | undefined
-  if (header !== null) {
-    const token = header.split(' ')[1]
+  if (authorization !== null && authorization !== '') {
+    const token = authorization.split(' ')[1]
 
     if (token === undefined) {
       throw new Error('No authorization provided.')

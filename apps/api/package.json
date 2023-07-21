@@ -19,6 +19,9 @@
     "preseed:run": "pnpm start-database",
     "seed:run": "tsx scripts/seed.ts --reset",
     "postseed:run": "pnpm stop-database",
+    "prereset-db": "pnpm start-database",
+    "reset-db": "tsx scripts/reset-database.ts",
+    "postreset-db": "pnpm stop-database",
     "start-database": "docker-compose up -d",
     "stop-database": "docker-compose stop"
   },

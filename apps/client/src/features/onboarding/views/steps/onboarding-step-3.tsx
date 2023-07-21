@@ -3,11 +3,11 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { DropMap } from '../../components/drop-map'
 import { ObjectList } from '../../components/object-list'
-import { ObjectsMap } from '../../components/objects-map'
 import { StageButton } from '../../components/stage-button'
 import { useStagesStore } from '../../hooks/stores/use-stages-store'
 import { useImageZone } from '../../hooks/use-image-zone'
 
+import { ObjectsMap } from '@/shared/components/objects-map'
 import { Button } from '@/shared/components/ui/button'
 import { Router } from '@/shared/router'
 
@@ -60,7 +60,7 @@ function StageList() {
                  h-full overflow-y-auto no-scrollbar'
     >
       <StageButton onClick={() => createStage()}>
-        <PlusIcon />
+        <PlusIcon className='m-auto' />
       </StageButton>
       {reverseStages.map((stage, index) => (
         <StageButton key={index} stage={stage} />
@@ -83,26 +83,14 @@ function HallCreateMapConfigureDevices() {
     state.stages[state.currentStageIndex]?.image)
   const objects = useStagesStore((state) =>
     state.stages[state.currentStageIndex]?.objects ?? [])
+  const updateStage = useStagesStore((state) => state.updateStage)
+  const currentStageIndex = useStagesStore((state) => state.currentStageIndex)
 
   if (mapImage === undefined) {
     throw new Error('No map image')
   }
 
-  const mapImageUrl = useMemo(() => {
-    return URL.createObjectURL(mapImage)
-  }, [mapImage])
-
-  const [mapImageAspectRatio, setMapImageAspectRatio] = useState<number>()
-  useEffect(() => {
-    createImageBitmap(mapImage).then((bitmap) => {
-      setMapImageAspectRatio(bitmap.width / bitmap.height)
-    })
-  }, [mapImage])
-
-  const [
-    imageZone,
-    { referenceFullWidthImageZone, referenceFullHeightImageZone },
-  ] = useImageZone()
+  const [imageZone, setImageZone] = useState<HTMLDivElement>()
 
   return <div className='flex flex-1 space-x-6'>
     <div className='flex flex-col flex-1 space-y-4'>
@@ -112,28 +100,25 @@ function HallCreateMapConfigureDevices() {
         à l’endroit où il se situe. Cliquez sur un capteur déjà placé
         pour le configurer.
       </p>
-      <div className='flex justify-center items-center flex-1 overflow-hidden'>
-        <div
-          style={{ backgroundImage: `url(${mapImageUrl})` }}
-          className='bg-center bg-no-repeat bg-contain overflow-hidden
-                     w-full h-full flex relative'
-        >
-          {/* The following divs are used to get the real image zone */}
-          <div
-            className='absolute w-full top-1/2 left-1/2
-            transform -translate-y-1/2 -translate-x-1/2'
-            style={{ aspectRatio: mapImageAspectRatio }}
-            ref={referenceFullWidthImageZone}
-          />
-          <div
-            className='absolute h-full top-1/2 left-1/2
-            transform -translate-y-1/2 -translate-x-1/2'
-            style={{ aspectRatio: mapImageAspectRatio }}
-            ref={referenceFullHeightImageZone}
-          />
-          <ObjectsMap imageZone={imageZone} objects={objects} />
-        </div>
-      </div>
+
+      <ObjectsMap
+        mapImage={mapImage}
+        objects={objects}
+        getImageZone={(imageZone) => setImageZone(imageZone)}
+        editable={{
+          updateObject(object) {
+            updateStage(currentStageIndex, {
+              objects: objects.map((localObject) => {
+                if (localObject.objectId === object.objectId) {
+                  return object
+                }
+
+                return localObject
+              }),
+            })
+          },
+        }}
+      />
     </div>
     <ObjectList imageZone={imageZone} />
   </div>
