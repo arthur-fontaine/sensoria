@@ -50,7 +50,7 @@ export function Users() {
       <div className='flex flex-col gap-4 mb-14'>
         <h1 className="font-extrabold text-5xl
           balance-text whitespace-pre-line">
-          Gestion des Utilisateurs
+          Gestion des utilisateurs
         </h1>
         <h4 className="font-normal text-xl">
           Visualisez l’ensemble des utilisateurs et leurs rôles.        
