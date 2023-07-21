@@ -1,10 +1,15 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { useCallback, useState } from 'react'
 import * as z from 'zod'
 
 import { Button } from '@/shared/components/ui/button'
 import {
   Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from '@/shared/components/ui/card'
 import {
   Form,
@@ -15,158 +20,130 @@ import {
   FormMessage,
 } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
+import { Label } from '@/shared/components/ui/label'
 import { Switch } from '@/shared/components/ui/switch'
-
-const FormSchema = z.object({
-  name: z.string().min(1, {
-    message: 'Entrez un nom',  
-  }),
-  seerooms: z.boolean().default(false),
-  managerooms: z.boolean().default(false),
-  addrooms: z.boolean().default(false),
-  seesensors: z.boolean().default(false),
-  managesensors: z.boolean().default(false),
-  addsensors: z.boolean().default(false),
-})
-
-async function onSubmit(){
-  console.log('test sumbit')
-}
+import { useMutation } from '@/shared/hooks/use-query'
+import { toast } from '@/shared/hooks/use-toast'
 
 async function onDelete(){
   console.log('test delete')
 }
 
-async function onSave(){
-  console.log('test save')
-}
-
 export function CardUpdateRole(properties: object) {
 
   const data = properties.data
+  const roleId = data.roleId
+  
+  const [permissions, setPermissions] = useState(data.permissions) 
 
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      name: data.name,
-      seerooms: data.permissions.includes('view_rooms'),
-      managerooms: data.permissions.includes('manage_rooms'),
-      addrooms: data.permissions.includes('add_rooms'),
-      seesensors: data.permissions.includes('view_sensors'),
-      managesensors: data.permissions.includes('manage_sensors'),
-      addsensors: data.permissions.includes('add_sensors'),
-    },
+  const handleSwitchChange = (permissionKey: string) => {
+    if (permissions.includes(permissionKey)) {
+      setPermissions(permissions.filter((perm) => perm !== permissionKey))
+    } else {
+      setPermissions([...permissions, permissionKey])
+    }
+  }
+  const [modifyPermissionsRoles] = useMutation<void, {
+    roleId: number
+    permissions: []
+  }>((
+    mutation,
+    { roleId, permissions },
+  ) => {
+    return mutation.modifyPermissionsRoles({
+      roleId, permissions,
+    })
   })
+
+  const onSave = async () => {
+    try {
+      const response = await modifyPermissionsRoles({
+        args: {roleId: roleId, permissions: permissions},
+      })
+      if (response !== undefined) {
+        toast({
+          title: 'Changement sauvegarder',
+        })
+      }
+    } catch (error) {
+      if (error) {
+        console.error(error)
+      }
+    }
+  }
 
   return (
     <Card className='p-6'>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}
-        >
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Nom du rôle</FormLabel>
-                <FormControl>
-                  <Input 
-                    {...field} className='w-full' />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className='space-y-3 mt-8'>
-            <FormLabel className='mt-6'>Permissions</FormLabel>
-            <FormField
-              control={form.control}
-              name="seerooms"
-              render={({ field }) => (
-                <FormItem className='space-y-0 flex gap-2 items-center' >
-                  <FormControl >
-                    <Switch id="seerooms" className='m-0'
-                      checked={field.value} onCheckedChange={field.onChange}/>
-                  </FormControl>
-                  <FormLabel>Voir les salles</FormLabel>
-                </FormItem>
-              )} />
-            <FormField
-              control={form.control}
-              name="managerooms"
-              render={({ field }) => (
-                <FormItem className='space-y-0 flex gap-2 items-center' >
-                  <FormControl >
-                    <Switch id="managerooms" className='m-0'
-                      checked={field.value} onCheckedChange={field.onChange}/>
-                  </FormControl>
-                  <FormLabel>Gérer les salles</FormLabel>
-                </FormItem>
-              )} />
-            <FormField
-              control={form.control}
-              name="addrooms"
-              render={({ field }) => (
-                <FormItem className='space-y-0 flex gap-2 items-center' >
-                  <FormControl >
-                    <Switch id="addrooms" className='m-0'
-                      checked={field.value} 
-                      onCheckedChange={field.onChange}/>                 
-                  </FormControl>
-                  <FormLabel>Rajouter des salles</FormLabel>
-                </FormItem>
-              )} />
-            <FormField
-              control={form.control}
-              name="seesensors"
-              render={({ field }) => (
-                <FormItem className='space-y-0 flex gap-2 items-center' >
-                  <FormControl >
-                    <Switch id="seesensors" className='m-0'
-                      checked={field.value} 
-                      onCheckedChange={field.onChange}/>                     
-                  </FormControl>
-                  <FormLabel>Voir les capteurs</FormLabel>
-                </FormItem>
-              )} />
-            <FormField
-              control={form.control}
-              name="managesensors"
-              render={({ field }) => (
-                <FormItem className='space-y-0 flex gap-2 items-center' >
-                  <FormControl >
-                    <Switch id="managesensors" className='m-0'
-                      checked={field.value} 
-                      onCheckedChange={field.onChange}/>                   
-                  </FormControl>
-                  <FormLabel>Gérer les capteurs</FormLabel>
-                </FormItem>
-              )} />
-            <FormField
-              control={form.control}
-              name="addsensors"
-              render={({ field }) => (
-                <FormItem className='space-y-0 flex gap-2 items-center' >
-                  <FormControl >
-                    <Switch id="addsensors" className='m-0'
-                      checked={field.value} 
-                      onCheckedChange={field.onChange}/>                       
-                  </FormControl>
-                  <FormLabel>Rajouter des capteurs</FormLabel>
-                </FormItem>
-              )} />
+      <CardContent>
+        <div>
+          <Label>Nom du rôle</Label>
+          <Input value={data.name}/>
+        </div>
+        <div className='space-y-4 mt-8'>
+          <Label>Permissions</Label>
+          <div className='flex gap-2'>
+            <Switch id="view_rooms" className='m-0'
+              checked={permissions.includes('view_rooms')} 
+              onCheckedChange={() => 
+                handleSwitchChange('view_rooms')}
+            />
+            <span>Voir les salles</span>
           </div>
-          <div className='flex mt-8 justify-end gap-2'>
-            <Button onClick={() => onSave()}>
+          <div className='flex gap-2'>
+            <Switch id="manage_rooms" className='m-0'
+              checked={permissions.includes('manage_rooms')} 
+              onCheckedChange={() => handleSwitchChange('manage_rooms')}
+
+            />
+            <span>Gérer les salles</span>
+
+          </div>
+          <div className='flex gap-2'>
+            <Switch id="add_rooms" className='m-0'
+              checked={permissions.includes('add_rooms')} 
+              onCheckedChange={() => handleSwitchChange('add_rooms')}
+
+            />
+            <span>Rajouter des salles</span>
+
+          </div>
+          <div className='flex gap-2'>
+            <Switch id="view_sensors" className='m-0'
+              checked={permissions.includes('view_sensors')} 
+              onCheckedChange={() => handleSwitchChange('view_sensors')}
+
+            />
+            <span>Voir les capteurs</span>
+
+          </div>
+          <div className='flex gap-2'>
+            <Switch id="manage_sensors" className='m-0'
+              checked={permissions.includes('manage_sensors')} 
+              onCheckedChange={() => 
+                handleSwitchChange('manage_sensors')}
+            />
+            <span>Gérer les capteurs</span>
+
+          </div>
+          <div className='flex gap-2'>
+            <Switch id="add_sensors" className='m-0'
+              checked={permissions.includes('add_sensors')} 
+              onCheckedChange={() => handleSwitchChange('add_sensors')}
+            />
+            <span>Rajouter des capteurs</span>
+
+          </div>
+        </div>
+      </CardContent>      
+      <CardFooter className='justify-end gap-2 mt-6'>
+        <Button onClick={() => onSave()}>
             Sauvegarder
-            </Button>
-            <Button variant="outline" className='text-red-600 border-red-600' 
-              onClick={() => onDelete()}>
+        </Button>
+        <Button variant="outline" className='text-red-600 border-red-600' 
+          onClick={() => onDelete()}>
             Supprimer
-            </Button>
-          </div>
-        </form>
-      </Form>
+        </Button>
+      </CardFooter>
     </Card>
 
   )

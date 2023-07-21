@@ -6,6 +6,9 @@ import { createBlockMutationResolver } from './resolvers/mutations/create-block'
 import {
   modifyPasswordMutationResolver,
 } from './resolvers/mutations/modify-password'
+import { 
+  modifyRoleMutationResolver, 
+} from './resolvers/mutations/modify-permissions-role'
 import { loginQueryResolver } from './resolvers/queries/authentication'
 import {
   getMeasureFromNotificationsQueryResolver,
@@ -55,6 +58,11 @@ export const mutationType = g.type('Mutation', {
       password: g.string(),
       newPassword: g.string(),
     }),
+  modifyPermissionsRoles: g.boolean()
+    .args({
+      roleId: g.int(),
+      permissions: g.string().list(), 
+    }),
   addRole: g.boolean()
     .args({
       name: g.string(),
@@ -103,6 +111,7 @@ const resolvers: Resolvers = {
     createBlock: createBlockMutationResolver,
     modifyPassword: modifyPasswordMutationResolver,
     addRole: addUserMutationResolver,
+    modifyPermissionsRoles: modifyRoleMutationResolver,
   },
   Subscription: {
     sensorData: sensorDataSubscribeResolver,
