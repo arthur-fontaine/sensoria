@@ -1,6 +1,7 @@
 import { type InferResolvers, buildSchema, g } from 'garph'
 
 import type { Context } from './context'
+import { addUserMutationResolver } from './resolvers/mutations/add-role'
 import { createBlockMutationResolver } from './resolvers/mutations/create-block'
 import {
   modifyPasswordMutationResolver,
@@ -54,6 +55,11 @@ export const mutationType = g.type('Mutation', {
       password: g.string(),
       newPassword: g.string(),
     }),
+  addRole: g.boolean()
+    .args({
+      name: g.string(),
+      permissions: g.string().list(),    
+    }),
   createBlock: g.ref(() => blockType)
     .args({
       block: g.ref(() => blockInputType).required(),
@@ -96,6 +102,7 @@ const resolvers: Resolvers = {
   Mutation: {
     createBlock: createBlockMutationResolver,
     modifyPassword: modifyPasswordMutationResolver,
+    addRole: addUserMutationResolver,
   },
   Subscription: {
     sensorData: sensorDataSubscribeResolver,

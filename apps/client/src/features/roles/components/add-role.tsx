@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import React from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
@@ -20,24 +21,64 @@ import {
 } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
 import { Switch } from '@/shared/components/ui/switch'
+import { useMutation } from '@/shared/hooks/use-query'
+import { toast } from '@/shared/hooks/use-toast'
 
 const FormSchema = z.object({
   name: z.string().min(1, {
     message: 'Entrez un nom',  
   }),
-  seerooms: z.boolean().default(false),
-  managerooms: z.boolean().default(false),
-  addrooms: z.boolean().default(false),
-  seesensors: z.boolean().default(false),
-  managesensors: z.boolean().default(false),
-  addsensors: z.boolean().default(false),
+  view_rooms: z.boolean().default(false),
+  manage_rooms: z.boolean().default(false),
+  add_rooms: z.boolean().default(false),
+  view_sensors: z.boolean().default(false),
+  manage_sensors: z.boolean().default(false),
+  add_sensors: z.boolean().default(false),
 })
 
-async function onSubmit(){
-  console.log('test sumbit')
-}
-
 export function DialogAddRole() {
+
+  const [open, setOpen] = React.useState(false)
+
+  const [addRole] = useMutation<void, {
+    name: string,
+    permissions: [],
+  }>((
+    mutation,
+    { name, permissions },
+  ) => {
+    return mutation.addRole({
+      name, permissions,
+    })
+  })
+  
+  const onSubmit = (async (data: z.infer<typeof FormSchema>) => {
+
+    const permissions = Object.entries(data)
+      .filter(([key, value]) => typeof value === 'boolean' && value === true)
+      .map(([key]) => key)
+    
+    try {
+      const response = await addRole({
+        args: {name : data.name, permissions: permissions},
+      })
+      if (response !== undefined) {
+        toast({
+          title: 'Role ajouter',
+        })
+      }
+
+      setOpen(false)
+    } catch (error) {
+      if (error) {
+        toast({
+          variant: 'destructive',
+          title: 'Erreur',
+          description: 'Veuillez réessayer plus tard',
+        })
+      }
+    }
+  })
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -47,7 +88,7 @@ export function DialogAddRole() {
   })
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">Ajouter un nouveau rôle</Button>
       </DialogTrigger>
@@ -75,11 +116,11 @@ export function DialogAddRole() {
               <FormLabel className='mt-6'>Permissions</FormLabel>
               <FormField
                 control={form.control}
-                name="seerooms"
+                name="view_rooms"
                 render={({ field }) => (
                   <FormItem className='space-y-0 flex gap-2 items-center' >
                     <FormControl >
-                      <Switch id="seerooms" className='m-0'
+                      <Switch id="view_rooms" className='m-0'
                         onCheckedChange={field.onChange}/>
                     </FormControl>
                     <FormLabel>Voir les salles</FormLabel>
@@ -87,11 +128,11 @@ export function DialogAddRole() {
                 )} />
               <FormField
                 control={form.control}
-                name="managerooms"
+                name="manage_rooms"
                 render={({ field }) => (
                   <FormItem className='space-y-0 flex gap-2 items-center' >
                     <FormControl >
-                      <Switch id="managerooms" className='m-0'
+                      <Switch id="manage_rooms" className='m-0'
                         onCheckedChange={field.onChange}/>
                     </FormControl>
                     <FormLabel>Gérer les salles</FormLabel>
@@ -99,11 +140,11 @@ export function DialogAddRole() {
                 )} />
               <FormField
                 control={form.control}
-                name="addrooms"
+                name="add_rooms"
                 render={({ field }) => (
                   <FormItem className='space-y-0 flex gap-2 items-center' >
                     <FormControl >
-                      <Switch id="addrooms" className='m-0'
+                      <Switch id="add_rooms" className='m-0'
                         onCheckedChange={field.onChange}/>                 
                     </FormControl>
                     <FormLabel>Rajouter des salles</FormLabel>
@@ -111,11 +152,11 @@ export function DialogAddRole() {
                 )} />
               <FormField
                 control={form.control}
-                name="seesensors"
+                name="view_sensors"
                 render={({ field }) => (
                   <FormItem className='space-y-0 flex gap-2 items-center' >
                     <FormControl >
-                      <Switch id="seesensors" className='m-0'
+                      <Switch id="view_sensors" className='m-0'
                         onCheckedChange={field.onChange}/>                     
                     </FormControl>
                     <FormLabel>Voir les capteurs</FormLabel>
@@ -123,11 +164,11 @@ export function DialogAddRole() {
                 )} />
               <FormField
                 control={form.control}
-                name="managesensors"
+                name="manage_sensors"
                 render={({ field }) => (
                   <FormItem className='space-y-0 flex gap-2 items-center' >
                     <FormControl >
-                      <Switch id="managesensors" className='m-0'
+                      <Switch id="manage_sensors" className='m-0'
                         onCheckedChange={field.onChange}/>                   
                     </FormControl>
                     <FormLabel>Gérer les capteurs</FormLabel>
@@ -135,11 +176,11 @@ export function DialogAddRole() {
                 )} />
               <FormField
                 control={form.control}
-                name="addsensors"
+                name="add_sensors"
                 render={({ field }) => (
                   <FormItem className='space-y-0 flex gap-2 items-center' >
                     <FormControl >
-                      <Switch id="addsensors" className='m-0'
+                      <Switch id="add_sensors" className='m-0'
                         onCheckedChange={field.onChange}/>
                     </FormControl>
                     <FormLabel>Rajouter des capteurs</FormLabel>
