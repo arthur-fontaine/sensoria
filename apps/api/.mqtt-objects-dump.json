@@ -1,0 +1,85 @@
+{
+  "sensors": [
+    {
+      "id": 119,
+      "type": "level",
+      "name": "level"
+    },
+    {
+      "id": 112,
+      "type": "temperature",
+      "name": "temperature"
+    },
+    {
+      "id": 116,
+      "type": "atmospheric_pressure",
+      "name": "atmospheric_pressure"
+    },
+    {
+      "id": 115,
+      "type": "motion",
+      "name": "motion"
+    },
+    {
+      "id": 101,
+      "type": "heat",
+      "name": "heat"
+    },
+    {
+      "id": 131,
+      "type": "co2",
+      "name": "co2"
+    },
+    {
+      "id": 114,
+      "type": "humidity",
+      "name": "humidity"
+    },
+    {
+      "id": 136,
+      "type": "adc",
+      "name": "adc"
+    },
+    {
+      "id": 104,
+      "type": "light",
+      "name": "light"
+    },
+    {
+      "id": 103,
+      "type": "vent",
+      "name": "vent"
+    },
+    {
+      "id": 118,
+      "type": "lux",
+      "name": "lux"
+    },
+    {
+      "id": 102,
+      "type": "ac",
+      "name": "ac"
+    },
+    {
+      "id": 128,
+      "type": "kwh",
+      "name": "kwh"
+    },
+    {
+      "id": 100,
+      "type": "persons",
+      "name": "persons"
+    }
+  ],
+  "icons": {
+    "persons": "users",
+    "temperature": "thermometer",
+    "atmospheric_pressure": "gauge",
+    "motion": "footprints",
+    "heat": "flame",
+    "humidity": "droplet",
+    "light": "sun",
+    "vent": "fan",
+    "kwh": "plug"
+  }
+}
