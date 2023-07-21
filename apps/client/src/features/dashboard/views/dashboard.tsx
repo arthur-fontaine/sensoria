@@ -1,7 +1,8 @@
 import { BellIcon, UsersIcon } from 'lucide-react'
-import { useMemo } from 'react'
+import { useEffect, useState } from 'react'
 
 import { StageButton } from '@/features/onboarding/components/stage-button'
+import { ObjectsMap } from '@/shared/components/objects-map'
 import { Button } from '@/shared/components/ui/button'
 import { useQuery } from '@/shared/hooks/use-query'
 import { Layout } from '@/shared/layout'
@@ -43,7 +44,7 @@ export function Dashboard() {
     </header>
     {
       block &&
-      <main className='flex gap-4'>
+      <main className='flex gap-4 flex-1'>
         <nav>
           <div
             className='flex flex-col space-y-4 mr-4 flex-shrink-0
@@ -54,7 +55,7 @@ export function Dashboard() {
                 key={index}
                 stage={{
                   ...stage,
-                  image: new Blob([stage.map]),
+                  image: new Blob(),
                   name: stage.label ?? '',
                 }}
                 onClick={() => {
@@ -77,12 +78,35 @@ function Hall({ hall }: {
     ReturnType<typeof useQuery>['blocks']
   >[number]['halls'][number],
 }) {
-  const imageURL = useMemo(() =>
-    URL.createObjectURL(new Blob([hall.map])), [hall.map])
+  const [imageBlob, setImageBlob] = useState<Blob>()
+
+  useEffect(() => {
+    if (hall.map === null || hall.map === undefined) {
+      return
+    }
+
+    if (imageBlob !== undefined) {
+      return
+    }
+
+    fetch(hall.map.base64)
+      .then((response) => response.blob())
+      .then((blob) => {
+        setImageBlob(blob)
+      })
+  }, [hall.map, imageBlob])
+
+  if (imageBlob === undefined) {
+    return
+  }
 
   return (
-    <div>
-      <img src={imageURL} alt={hall.label} />
-    </div>
+    <ObjectsMap
+      mapImage={imageBlob}
+      objects={hall.objects}
+      editable={false}
+      colorizeObjects={true}
+      openModalOnObjectClick={true}
+    />
   )
 }

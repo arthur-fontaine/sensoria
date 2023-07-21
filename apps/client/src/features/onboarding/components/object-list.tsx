@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 
-import { ObjectIcon } from './object-icon'
+import { ObjectIcon } from '../../../shared/components/object-icon'
 import { useStagesStore } from '../hooks/stores/use-stages-store'
 import { useDraggable } from '../hooks/use-draggable'
 
@@ -13,7 +13,7 @@ interface ObjectListProperties {
 }
 
 export function ObjectList({ imageZone }: ObjectListProperties) {
-  const remoteObjects = useQuery().objects
+  const remoteObjects = useQuery().objects()
   const localObjects = useStagesStore((state) =>
     state.stages[state.currentStageIndex]?.objects ?? [])
 
@@ -35,11 +35,11 @@ export function ObjectList({ imageZone }: ObjectListProperties) {
   }, [remoteObjects, localObjects])
 
   const sensors = useMemo(() => {
-    return objects.filter((object) => true)
+    return objects.filter((object) => true) // TODO
   }, [objects])
 
   const actions = useMemo(() => {
-    return objects.filter((object) => false)
+    return objects.filter((object) => false) // TODO
   }, [objects])
 
   return <div className="p-6 overflow-auto rounded-lg bg-card
@@ -79,7 +79,7 @@ export function ObjectList({ imageZone }: ObjectListProperties) {
             text-muted-foreground">
               Capteurs
             </h4>
-            {sensors.map((sensor) => {
+            {sensors.map(({ ...sensor }) => {
               if (sensor.objectId === undefined) {
                 return
               }
@@ -101,7 +101,7 @@ export function ObjectList({ imageZone }: ObjectListProperties) {
 
 interface ObjectListItemProperties {
   imageZone: HTMLDivElement | undefined
-  object: ReturnType<typeof useQuery>['objects'][number]
+  object: ReturnType<ReturnType<typeof useQuery>['objects']>[number]
 }
 
 function ObjectListItem({ imageZone, object }: ObjectListItemProperties) {

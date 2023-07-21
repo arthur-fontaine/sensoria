@@ -48,7 +48,7 @@ export function StageButton(
           : onClick
       }
     >
-      <span className='w-full truncate'>
+      <span className='w-full truncate text-center'>
         {
           stage === undefined
             ? children

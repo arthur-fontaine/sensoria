@@ -31,7 +31,7 @@ async function getBlocks(userId: number, id?: number) {
     ))
 
   if (id !== undefined) {
-    query = query.where(eq(halls.blockId, id))
+    query = query.where(eq(blocks.blockId, id))
   }
 
   return query.then(rows =>

@@ -1,7 +1,13 @@
 import { Label } from '@radix-ui/react-label'
 import chroma from 'chroma-js'
-import { BatteryMedium } from 'lucide-react'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import {
+  BatteryFullIcon, BatteryIcon,
+  BatteryLowIcon, BatteryMediumIcon,
+} from 'lucide-react'
+import {
+  PropsWithChildren, useCallback, useEffect,
+  useMemo, useState,
+} from 'react'
 
 import { Button } from '../../../shared/components/ui/button'
 import {
@@ -20,8 +26,21 @@ interface ModalProperties {
   id: number;
 }
 
-export function ObjectModal(properties: ModalProperties) {
-  const [object] = useQuery().objects({ id: properties.id })
+export function ObjectModal(properties: PropsWithChildren<ModalProperties>) {
+  const [object] = useQuery({
+    prepare({ query }) {
+      return query.objects({ id: properties.id }).map((object) => ({
+        ...object,
+        lastMeasure: {
+          ...object.lastMeasure,
+        },
+        tags: object.tags.map((tag) => ({
+          ...tag,
+        })),
+      }))
+    },
+  }).objects({ id: properties.id })
+  console.log(JSON.stringify(object))
   const objectId = object?.objectId
 
   const [deleteObject] = useMutation<undefined, number>((mutation, input) => {
@@ -90,7 +109,6 @@ export function ObjectModal(properties: ModalProperties) {
       maximum === undefined ||
       currentValue === undefined
     ) {
-
       return
     }
 
@@ -103,7 +121,7 @@ export function ObjectModal(properties: ModalProperties) {
     }
 
     return (currentValue - minimum) * 100 / (maximum - minimum)
-  }, [modifyInput])
+  }, [modifyInput, object])
 
   const colorTriangle = useMemo(() =>
     chroma.scale(['green', 'orange', 'red']), [])
@@ -116,7 +134,6 @@ export function ObjectModal(properties: ModalProperties) {
   )
 
   useEffect(() => {
-
     if (Object.values(modifyInput).length === 0 && object !== undefined) {
       setModifyInput(
         Object.fromEntries(object.thresholds.flatMap((threshold) => {
@@ -129,34 +146,58 @@ export function ObjectModal(properties: ModalProperties) {
         })),
       )
     }
-  }, [object])
+  }, [])
+
+  // }, [object])
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">{object?.iconName}</Button>
+        {properties.children}
       </DialogTrigger>
       <DialogContent className="gap-0 sm:max-w-[425px]">
         <DialogHeader>
           <div className="flex items-end gap-3">
             <DialogTitle className="text-xl">{object?.name}</DialogTitle>
-            <div className="flex items-center gap-1 text-sm text-slate-500">
-              <BatteryMedium />
-              {object?.batteryLevel ? object?.batteryLevel * 100 : undefined}%
-            </div>
+            {
+              (object?.batteryLevel !== undefined
+                && object?.batteryLevel !== null)
+              &&
+              <div className="flex items-center gap-1 text-sm text-slate-500">
+                {
+                  object.batteryLevel === 0
+                    ? <BatteryIcon />
+                    : (object.batteryLevel < 0.25
+                      ? <BatteryLowIcon />
+                      // eslint-disable-next-line unicorn/no-nested-ternary
+                      : object.batteryLevel < 0.5
+                        ? <BatteryMediumIcon />
+                        : <BatteryFullIcon />)
+                }
+                {object.batteryLevel * 100}%
+              </div>
+            }
           </div>
-          <DialogDescription className="pt-0.5 text-slate-500">
-            {object?.description}
-          </DialogDescription>
-          {object?.lastMeasure?.value ? <>
+          {object?.description !== undefined && object?.description !== null &&
+            object?.description !== '' &&
+            <DialogDescription className="pt-0.5 text-slate-500">
+              {object?.description}
+            </DialogDescription>
+          }
+          {(
+            object?.lastMeasure?.value !== undefined &&
+            cursorProgress
+          ) && <>
             <Label htmlFor="name"
               className="pt-6 pb-3 text-sm font-semibold">
-              Mesure en temps réel
+                Mesure en temps réel
             </Label>
-            <div className="h-2 w-full rounded-full 
-            bg-gradient-to-r from-green-500
-             via-orange-500 to-red-500 ...">
-              <div className='relative w-full translate-y-full '>
+            <div className='flex flex-col items-center gap-[2px]'>
+              <div className="h-2 w-full rounded-full 
+                    bg-gradient-to-r from-green-500
+                  via-orange-500 to-red-500 ...">
+              </div>
+              <div className='relative w-full'>
                 <div>
                   <svg width="16" height="10"
                     viewBox="0 0 16 10"
@@ -166,9 +207,9 @@ export function ObjectModal(properties: ModalProperties) {
                     <path
                       d="M14.2929 7.29289L8.70711 1.70711C8.31658
                      1.31658 7.68342 1.31658 7.29289 1.70711L1.70711 
-                     7.29289C1.07714 7.92286 1.52331 9 2.41421 9H13.
-                     5858C14.4767 9 14.9229 7.92286 14.2929 7.29289Z"
-                      fill={`${changeColor}88`}
+                      7.29289C1.07714 7.92286 1.52331 9 2.41421
+                      9H13.5858C14.4767 9 14.9229 7.92286
+                      14.2929 7.29289Z" fill={`${changeColor}88`}
                       stroke={
                         typeof changeColor === 'number'
                           ? undefined
@@ -178,8 +219,7 @@ export function ObjectModal(properties: ModalProperties) {
                 </div>
               </div>
             </div>
-          </>
-            : undefined}
+          </>}
           <Label htmlFor="name" className="pt-6 pb-3 text-sm font-semibold">
             Tags
           </Label>
@@ -206,7 +246,9 @@ export function ObjectModal(properties: ModalProperties) {
           {object?.thresholds.map((fields) => (
             <>
               <div className="flex items-center gap-3">
-                <Label className='text-sm font-semibold'>Minimum</Label>
+                <Label className='text-sm font-medium leading-[14px]'>
+                  Minimum
+                </Label>
                 <Input
                   placeholder="Minimum"
                   type='number'
@@ -225,7 +267,9 @@ export function ObjectModal(properties: ModalProperties) {
                 />
               </div>
               <div className="flex items-center gap-3">
-                <Label className='text-sm font-semibold'>Maximum</Label>
+                <Label className='text-sm font-medium leading-[14px]'>
+                  Maximum
+                </Label>
                 <Input
                   placeholder="Maximum"
                   type='number'

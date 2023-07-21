@@ -47,5 +47,5 @@ export const objectInputType = g.inputType('ObjectInput', {
   emplacement: g.ref(() => coordinates)
     .optional()
     .description('The object emplacement'),
-  thresholds: g.ref(() => thresholdInputType).list(),
+  thresholds: g.ref(() => thresholdInputType).list().default([]),
 })

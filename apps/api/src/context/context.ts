@@ -14,7 +14,7 @@ export async function createContext(initialContext: YogaInitialContext) {
   const authorization = initialContext.request.headers.get('authorization')
 
   let userId: number | undefined
-  if (authorization !== null) {
+  if (authorization !== null && authorization !== '') {
     const token = authorization.split(' ')[1]
 
     if (token === undefined) {
