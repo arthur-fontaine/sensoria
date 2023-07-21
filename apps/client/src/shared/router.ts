@@ -7,5 +7,5 @@ export const Router = createRouter({
   Dashboard: '/dashboard',
   Users: '/users',
   Tag: '/tags/:tagId',
-  Graph: '/graph',
+  Graph: '/graph'
 })

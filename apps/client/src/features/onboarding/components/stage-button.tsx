@@ -31,7 +31,7 @@ export function StageButton(
 
   const stageItemStyle = 'flex items-center justify-center ' +
     'p-12 bg-card rounded-lg select-none ' +
-    'text-card-foreground'
+    'text-card-foreground border'
 
   return (
     <div

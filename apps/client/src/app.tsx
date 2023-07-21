@@ -1,13 +1,12 @@
 import { Label } from '@radix-ui/react-label'
-
 import { Dashboard } from '@/features/dashboard/views/dashboard'
-import { Graph } from '@/features/graph/views/graph'
 import { Login } from '@/features/login/views/login'
 import { Updatepassword } from '@/features/login/views/updatepassword'
 import { Onboarding } from '@/features/onboarding/views/onboarding'
 import { Tag } from '@/features/tag/views/tag'
 import { Users } from '@/features/users/views/users'
 import { useRoute } from '@/shared/hooks/use-route'
+import { Graph } from './features/graph/views/graph'
 
 export function App() {
 
@@ -21,14 +20,14 @@ export function App() {
     'Graph',
   ])
 
-  const token = sessionStorage.getItem('token') ?? localStorage.getItem('token')
+  // const token = sessionStorage.getItem('token') ?? localStorage.getItem('token')
   
-  if (!token && !([
-    'Onboarding',
-    'Login',
-  ]).includes(route?.name ?? '')) {
-    return <Login />
-  }
+  // if (!token && !([
+  //   'Onboarding',
+  //   'Login',
+  // ]).includes(route?.name ?? '')) {
+  //   return <Login />
+  // }
 
   switch (route?.name) {
     case 'Login': {

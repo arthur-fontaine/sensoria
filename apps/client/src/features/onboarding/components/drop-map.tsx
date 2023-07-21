@@ -58,7 +58,7 @@ export function DropMap() {
       className={
         cn(
           'rounded-lg p-6 flex-1 flex flex-col justify-center items-center',
-          isOver ? 'bg-muted' : 'bg-muted/50',
+          'text-muted-foreground bg-card',
         )
       }
       onDragEnter={onDragEnter}
@@ -66,14 +66,20 @@ export function DropMap() {
       onDragOver={onDragOver}
       onDrop={onDropCallback}
     >
-      <div className="contents pointer-events-none">
-        <div className="w-full h-full border-2 border-dashed
-        border-muted-foreground
-        rounded-[calc(theme(borderRadius.lg)-theme(padding.6))]
-        p-6 flex flex-col justify-center items-center flex-1">
+      <div className="pointer-events-none contents">
+        <div className={
+          cn(
+            'w-full h-full border-2 border-dashed',
+            'rounded-[calc(theme(borderRadius.lg)-theme(padding.6))]',
+            'p-6 flex flex-col justify-center items-center flex-1',
+            isOver
+              ? 'border-muted-foreground'
+              : 'border-muted-foreground/50',
+          )
+        }>
           {isOver
-            ? <p className="text-muted-foreground">Lâchez votre plan ici</p>
-            : <p className="text-muted-foreground">Déposez votre plan ici</p>
+            ? <p>Lâchez votre plan ici</p>
+            : <p>Déposez votre plan ici</p>
           }
         </div>
       </div>

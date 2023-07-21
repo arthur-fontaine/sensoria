@@ -10,7 +10,7 @@
     --background: 0 0% 100%;
     --foreground: 244 48% 14%;
 
-    --muted: 232 100% 97%;
+    --muted: 232 100% 99%;
     --muted-foreground: 232 59% 77%;
 
     --popover: 0 0% 100%;
@@ -19,7 +19,7 @@
     --border: 233 100% 91%;
     --input: 233 100% 91%;
 
-    --card: 232 100% 95%;
+    --card: 232 100% 98%;
     --card-foreground: 244 48% 14%;
 
     --primary: 243 48% 26%;
@@ -95,10 +95,11 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground overflow-hidden;
+    @apply overflow-hidden bg-background text-foreground;
   }
 }
 html,body,#root{
   height: 100vh;
+  /* height: 100vh; */
   overflow-y: scroll;
 }
