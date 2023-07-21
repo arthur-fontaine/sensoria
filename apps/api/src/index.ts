@@ -5,15 +5,28 @@ import { addUserMutationResolver } from './resolvers/mutations/add-user'
 import { createBlockMutationResolver } from './resolvers/mutations/create-block'
 import { deleteUserMutationResolver } from './resolvers/mutations/delete-user'
 import {
+  deleteObjectMutationResolver,
+} from './resolvers/mutations/delete-object'
+import { editObjectMutationResolver } from './resolvers/mutations/edit-object'
+import {
   modifyPasswordMutationResolver,
 } from './resolvers/mutations/modify-password'
 import { modifyRoleMutationResolver } from './resolvers/mutations/modify-roles'
 import { loginQueryResolver } from './resolvers/queries/authentication'
 import {
+  getBlocksQueryResolver, getHallsFromBlockQueryResolver,
+} from './resolvers/queries/get-blocks'
+import { getObjectsFromHallQueryResolver } from './resolvers/queries/get-halls'
+import {
+  getSensorFromMeasureQueryResolver,
+} from './resolvers/queries/get-measures'
+import {
   getMeasureFromNotificationsQueryResolver,
   getNotificationsQueryResolver,
 } from './resolvers/queries/get-notifications'
 import {
+  getBatteryLevelFromObjectQueryResolver,
+  getIsAvailableFromObjectQueryResolver,
   getLastMeasureFromObjectQueryResolver, getMeasuresFromObjectQueryResolver,
   getObjectsQueryResolver, getTagsFromObjectQueryResolver,
   getThresholdsFromObjectQueryResolver,
@@ -29,8 +42,8 @@ import { blockInputType, blockType } from './schemas/block'
 import type { hallType } from './schemas/hall'
 import { measureType } from './schemas/measure'
 import { notificationsType } from './schemas/notifications'
-import { objectType } from './schemas/object'
 import { roleType } from './schemas/roles'
+import { objectInputType, objectType } from './schemas/object'
 import type { tagType } from './schemas/tag'
 import type { thresholdType } from './schemas/threshold'
 import type { thresholdTriggerType } from './schemas/threshold-trigger'
@@ -45,9 +58,13 @@ export const queryType = g.type('Query', {
     }),
   objects: g.ref(() => objectType).list()
     .args({
-      id: g.int().optional(),
+      id: g.int().optional().description('The id of the object'),
     })
     .description('Get all objects'),
+  blocks: g.ref(() => blockType).list()
+    .args({
+      id: g.int().optional(),
+    }),
   notifications: g.ref(() => notificationsType).list()
     .description('Get all notifications'),
   roles: g.ref(() => roleType).list().description('Get All Roles'),
@@ -81,6 +98,16 @@ export const mutationType = g.type('Mutation', {
       email: g.string().required(),
     })
     .description('Create a new block'),
+  editObject: g.ref(() => objectType)
+    .args({
+      object: g.ref(() => objectInputType).required(),
+    })
+    .description('Edit an object'),
+  deleteObject: g.boolean()
+    .args({
+      id: g.int().required().description('The id of the object'),
+    })
+    .description('Delete an object by id'),
 })
 
 export const subscriptionType = g.type('Subscription', {
@@ -115,6 +142,7 @@ const resolvers: Resolvers = {
     notifications: getNotificationsQueryResolver,
     roles: getRolesQueryResolver,
     users: getUsersQueryResolver,
+    blocks: getBlocksQueryResolver,
   },
   Mutation: {
     createBlock: createBlockMutationResolver,
@@ -122,25 +150,32 @@ const resolvers: Resolvers = {
     deleteUser: deleteUserMutationResolver,
     addUser: addUserMutationResolver,
     modifyRole: modifyRoleMutationResolver,
+    editObject: editObjectMutationResolver,
+    deleteObject: deleteObjectMutationResolver,
   },
   Subscription: {
-    sensorData: sensorDataSubscribeResolver,
+    sensorData: {
+      subscribe: sensorDataSubscribeResolver,
+      resolve: (payload) => payload,
+    },
   },
   Object: {
     lastMeasure: getLastMeasureFromObjectQueryResolver,
     measures: getMeasuresFromObjectQueryResolver,
     tags: getTagsFromObjectQueryResolver,
     thresholds: getThresholdsFromObjectQueryResolver,
+    isAvailable: getIsAvailableFromObjectQueryResolver,
+    batteryLevel: getBatteryLevelFromObjectQueryResolver,
   },
   Block: {
-    // halls: getHallsFromBlockQueryResolver,
+    halls: getHallsFromBlockQueryResolver,
   },
   Hall: {
     // block: getBlockFromHallQueryResolver,
-    // objects: getObjectsFromHallQueryResolver,
+    objects: getObjectsFromHallQueryResolver,
   },
   Measure: {
-    // sensor: getSensorFromMeasureQueryResolver,
+    sensor: getSensorFromMeasureQueryResolver,
   },
   Notifications: {
     measure: getMeasureFromNotificationsQueryResolver,

@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 
-import { ObjectIcon } from './object-icon'
+import { ObjectIcon } from '../../../shared/components/object-icon'
 import { useStagesStore } from '../hooks/stores/use-stages-store'
 import { useDraggable } from '../hooks/use-draggable'
 
@@ -13,7 +13,7 @@ interface ObjectListProperties {
 }
 
 export function ObjectList({ imageZone }: ObjectListProperties) {
-  const remoteObjects = useQuery().objects
+  const remoteObjects = useQuery().objects()
   const localObjects = useStagesStore((state) =>
     state.stages[state.currentStageIndex]?.objects ?? [])
 
@@ -35,18 +35,16 @@ export function ObjectList({ imageZone }: ObjectListProperties) {
   }, [remoteObjects, localObjects])
 
   const sensors = useMemo(() => {
-    return objects.filter((object) => true)
+    return objects.filter((object) => true) // TODO
   }, [objects])
 
   const actions = useMemo(() => {
-    return objects.filter((object) => false)
+    return objects.filter((object) => false) // TODO
   }, [objects])
 
-  return <div className="bg-card text-card-foreground
-                         rounded-lg p-6 overflow-auto
-                         scrollbar scrollbar-thumb-card-foreground
-                         scrollbar-w-1 scrollbar-thumb-rounded-lg
-                         scrollbar-track-transparent">
+  return <div className="p-6 overflow-auto rounded-lg bg-card
+  text-card-foreground scrollbar scrollbar-thumb-card-foreground scrollbar-w-1
+  scrollbar-thumb-rounded-lg scrollbar-track-transparent">
     <h3 className='text-lg font-semibold leading-7'>
       Objets disponibles
     </h3>
@@ -54,7 +52,7 @@ export function ObjectList({ imageZone }: ObjectListProperties) {
       {
         actions.length > 0 && (
           <>
-            <h4 className="text-muted text-xs font-medium leading-tight">
+            <h4 className="text-xs font-medium leading-tight text-muted">
               Actionneurs
             </h4>
             {actions.map((action) => {
@@ -77,11 +75,11 @@ export function ObjectList({ imageZone }: ObjectListProperties) {
       {
         sensors.length > 0 && (
           <>
-            <h4 className="text-muted-foreground text-xs
-                          font-medium leading-tight">
+            <h4 className="text-xs font-medium leading-tight
+            text-muted-foreground">
               Capteurs
             </h4>
-            {sensors.map((sensor) => {
+            {sensors.map(({ ...sensor }) => {
               if (sensor.objectId === undefined) {
                 return
               }
@@ -103,7 +101,7 @@ export function ObjectList({ imageZone }: ObjectListProperties) {
 
 interface ObjectListItemProperties {
   imageZone: HTMLDivElement | undefined
-  object: ReturnType<typeof useQuery>['objects'][number]
+  object: ReturnType<ReturnType<typeof useQuery>['objects']>[number]
 }
 
 function ObjectListItem({ imageZone, object }: ObjectListItemProperties) {
@@ -188,7 +186,7 @@ function ObjectListItem({ imageZone, object }: ObjectListItemProperties) {
       )}
     />
     <span
-      className="w-full truncate text-sm font-medium leading-normal"
+      className="w-full text-sm font-medium leading-normal truncate"
       title={object.name}
     >
       {object.name}

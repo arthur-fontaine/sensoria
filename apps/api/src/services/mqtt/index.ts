@@ -3,6 +3,8 @@ import { mqttClient } from './utils/mqtt-client'
 import { readObjectsDump, writeSensorToDump } from './utils/objects-dump'
 import { sensorDataEvent, sensorDataSchema } from './utils/sensor-data-event'
 
+import './utils/sync-mqtt-database-objects'
+
 let MQTT_BASE_TOPIC: string | undefined = ''
 
 if (typeof window === 'undefined') {
@@ -49,14 +51,25 @@ function handleMqttMessage(topic: string, rawData: string) {
 
   const { source_address, tx_time_ms_epoch, data, sensor_id } = result.data
 
-  const sensor = objects.topics[topic]?.sensors.find(
+  // TODO
+  const sensor = objects.sensors.find(
     (sensor) => sensor.id === (sensor_id === undefined
       ? undefined
       : Number(sensor_id)),
   )
 
   if (sensor === undefined) {
-    writeSensorToDump(topic, Number(sensor_id))
+    writeSensorToDump(
+      Number(sensor_id),
+      undefined,
+      undefined,
+
+      // Object.keys(result.data.data)[0],
+      typeof data === 'object'
+        && data !== null
+        ? Object.keys(data)[0]
+        : undefined,
+    )
     objects = readObjectsDump()
   }
 

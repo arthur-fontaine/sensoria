@@ -1,8 +1,14 @@
+import crypto from 'node:crypto'
+
+import bcrypt from 'bcryptjs'
 import { eq } from 'drizzle-orm'
 
 import type { Resolvers } from '../..'
 import { database } from '../../db'
-import { blocks, halls, objects } from '../../db/schema'
+import {
+  blocks, halls, objects, roles,
+  users, usersToAccesses,
+} from '../../db/schema'
 import type { ResolverFunction } from '../../types/resolver-functions'
 
 type CreateBlockMutationResolver = ResolverFunction<NonNullable<
@@ -15,6 +21,7 @@ export const createBlockMutationResolver: CreateBlockMutationResolver = (
       name: args.block.name,
       location: args.block.location,
       halls: args.block.halls,
+      email: args.email,
     })
   }
 )
@@ -26,8 +33,12 @@ async function createBlock(
     halls: {
       map: Blob | { base64: string }
       label: string
-      objects: { objectId: number, emplacement: [number, number] }[]
+      objects: {
+        objectId: number,
+        emplacement?: [number, number] | null | undefined
+      }[]
     }[],
+    email: string,
   },
 ) {
   return database.transaction(async (tx) => {
@@ -63,9 +74,10 @@ async function createBlock(
         hallId: number
         blockId: number
         label: string
-        map: Blob
+        map: Blob | { base64: string }
         objects: {
           objectId: number
+          name: string
           emplacement: [number, number]
         }[]
       }[] = []
@@ -78,6 +90,8 @@ async function createBlock(
           .values({
             blockId: createdBlockId,
             label,
+
+            // using Buffer.from(map.base64, 'base64url') doesn't work
             map: map instanceof Blob
               ? Buffer.from(await map.arrayBuffer())
               : Buffer.from(map.base64, 'base64'),
@@ -97,10 +111,16 @@ async function createBlock(
         const updatedObjects = await tx2.transaction(async (tx3) => {
           const updatedObjects: {
             objectId: number
+            name: string
             emplacement: [number, number]
           }[] = []
 
           for (const { objectId, emplacement } of hallObjects) {
+            if (emplacement === undefined) {
+              console.error('Object emplacement is undefined')
+              continue
+            }
+
             const updatedObjects = await tx3
               .update(objects)
               .set({
@@ -141,13 +161,15 @@ async function createBlock(
           ...createdHall === undefined ? [] : [{
             ...createdHall,
             objects: updatedObjects,
-            map: new Blob([createdHall.map]),
+            map: { base64: createdHall.map.toString('base64url') },
           }],
         )
       }
 
       return createdHalls
     })
+
+    await createUser(tx, args.email, createdHalls.map((hall) => hall.hallId))
 
     return {
       blockId: createdBlockId,
@@ -156,6 +178,67 @@ async function createBlock(
       location: createBlockLocation,
     }
   })
+}
+
+// https://stackoverflow.com/a/51540480
+function generatePassword(
+  length = 20,
+  // eslint-disable-next-line max-len
+  wishlist = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~!@-#$',
+) {
+  return [...crypto.randomFillSync(new Uint32Array(length))]
+    .map((x) => wishlist[x % wishlist.length])
+    .join('')
+}
+
+type Tx = Parameters<Parameters<typeof database.transaction>[0]>[0]
+
+async function createUser(tx: Tx, email: string, hallIds: number[]) {
+  const password = generatePassword()
+
+  await database
+    .insert(roles)
+    .values({
+      roleId: -1,
+    })
+    .onConflictDoNothing({
+      target: [roles.roleId],
+    })
+    .execute()
+
+  const { userId } = await tx
+    .insert(users)
+    .values({
+      email,
+      name: email,
+      password: bcrypt.hashSync(password, 10),
+      roleId: -1,
+    })
+    .returning({
+      userId: users.userId,
+    })
+    .execute()
+    .then(([user]) => {
+      if (user === undefined) {
+        throw new Error('User not created')
+      }
+
+      return user
+    })
+
+  for (const hallId of hallIds) {
+    await tx
+      .insert(usersToAccesses)
+      .values({
+        userId,
+        hallId,
+        haveAccess: true,
+      })
+      .execute()
+  }
+
+  // TODO: send email
+  console.info(`Created user ${email} with password ${password}`)
 }
 
 if (import.meta.vitest) {

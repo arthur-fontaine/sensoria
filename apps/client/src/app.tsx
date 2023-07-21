@@ -21,12 +21,12 @@ export function App() {
 
   const token = sessionStorage.getItem('token') ?? localStorage.getItem('token')
   
-  if (!token && !([
-    'Onboarding',
-    'Login',
-  ]).includes(route?.name ?? '')) {
-    return <Login />
-  }
+  // if (!token && !([
+  //   'Onboarding',
+  //   'Login',
+  // ]).includes(route?.name ?? '')) {
+  //   return <Login />
+  // }
 
   switch (route?.name) {
     case 'Login': {
