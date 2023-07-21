@@ -28,6 +28,7 @@
   "dependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/jsonwebtoken": "^9.0.2",
+    "@types/nodemailer": "^6.4.8",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.3.1",
     "drizzle-kit": "^0.19.2",
@@ -37,6 +38,7 @@
     "graphql-yoga": "^4.0.2",
     "jsonwebtoken": "^9.0.0",
     "mqtt": "^4.3.7",
+    "nodemailer": "^6.9.3",
     "postgres": "^3.3.5",
     "typed-regex": "^0.0.8",
     "zod": "^3.21.4",

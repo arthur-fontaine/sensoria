@@ -1,6 +1,6 @@
 import { type InferResolvers, buildSchema, g } from 'garph'
 
-import type { Context } from './context/context'
+import type { Context } from './context'
 import { createBlockMutationResolver } from './resolvers/mutations/create-block'
 import {
   deleteObjectMutationResolver,
@@ -18,6 +18,10 @@ import {
   getSensorFromMeasureQueryResolver,
 } from './resolvers/queries/get-measures'
 import {
+  getMeasureFromNotificationsQueryResolver,
+  getNotificationsQueryResolver,
+} from './resolvers/queries/get-notifications'
+import {
   getBatteryLevelFromObjectQueryResolver,
   getIsAvailableFromObjectQueryResolver,
   getLastMeasureFromObjectQueryResolver, getMeasuresFromObjectQueryResolver,
@@ -30,6 +34,7 @@ import {
 import { blockInputType, blockType } from './schemas/block'
 import type { hallType } from './schemas/hall'
 import { measureType } from './schemas/measure'
+import { notificationsType } from './schemas/notifications'
 import { objectInputType, objectType } from './schemas/object'
 import type { tagType } from './schemas/tag'
 import type { thresholdType } from './schemas/threshold'
@@ -51,6 +56,8 @@ export const queryType = g.type('Query', {
     .args({
       id: g.int().optional(),
     }),
+  notifications: g.ref(() => notificationsType).list()
+    .description('Get all notifications'),
 })
 
 export const mutationType = g.type('Mutation', {
@@ -94,6 +101,7 @@ export type Resolvers = InferResolvers<{
   Block: typeof blockType
   Hall: typeof hallType
   Measure: typeof measureType
+  Notifications: typeof notificationsType
   Object: typeof objectType
   Tag: typeof tagType
   Threshold: typeof thresholdType
@@ -105,6 +113,7 @@ const resolvers: Resolvers = {
   Query: {
     objects: getObjectsQueryResolver,
     authentication: loginQueryResolver,
+    notifications: getNotificationsQueryResolver,
     blocks: getBlocksQueryResolver,
   },
   Mutation: {
@@ -136,6 +145,9 @@ const resolvers: Resolvers = {
   },
   Measure: {
     sensor: getSensorFromMeasureQueryResolver,
+  },
+  Notifications: {
+    measure: getMeasureFromNotificationsQueryResolver,
   },
   Tag: {},
   ThresholdTrigger: {

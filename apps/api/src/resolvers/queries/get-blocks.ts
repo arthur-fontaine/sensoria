@@ -48,5 +48,9 @@ export const getHallsFromBlockQueryResolver: GetHallsFromBlockQueryResolver = (
       .findMany({
         where: (halls, { eq }) => eq(halls.blockId, parent.blockId),
       })
+      .then(rows => rows.map((hall) => ({
+        ...hall,
+        map: { base64: hall.map.toString('base64url') },
+      })))
   }
 )

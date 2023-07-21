@@ -31,7 +31,7 @@ async function createBlock(
     name: string,
     location: [number, number],
     halls: {
-      map: Buffer | { base64: string }
+      map: Blob | { base64: string }
       label: string
       objects: {
         objectId: number,
@@ -74,7 +74,7 @@ async function createBlock(
         hallId: number
         blockId: number
         label: string
-        map: Buffer
+        map: Blob | { base64: string }
         objects: {
           objectId: number
           name: string
@@ -92,9 +92,9 @@ async function createBlock(
             label,
 
             // using Buffer.from(map.base64, 'base64url') doesn't work
-            map: map instanceof Buffer
-              ? map
-              : Buffer.from(map.base64),
+            map: map instanceof Blob
+              ? Buffer.from(await map.arrayBuffer())
+              : Buffer.from(map.base64, 'base64'),
           })
           .returning({
             hallId: halls.hallId,
@@ -161,6 +161,7 @@ async function createBlock(
           ...createdHall === undefined ? [] : [{
             ...createdHall,
             objects: updatedObjects,
+            map: { base64: createdHall.map.toString('base64url') },
           }],
         )
       }

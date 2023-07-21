@@ -127,6 +127,11 @@ export const getHallFromObjectQueryResolver:
         .findFirst({
           where: (hall, { eq }) => eq(hall.hallId, hallId),
         })
+        .then((hall) => (
+          hall && {
+            ...hall,
+            map: { base64: hall.map.toString('base64url') },
+          }))
     }
   )
 

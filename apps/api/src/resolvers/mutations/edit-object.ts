@@ -19,7 +19,7 @@ function editObject(args: {
   object: {
     objectId: number
     name?: string
-    emplacement?: [number, number]
+    emplacement?: [number, number] | null | undefined
   }
 }) {
   return database
