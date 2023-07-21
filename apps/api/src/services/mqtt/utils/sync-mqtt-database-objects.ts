@@ -1,9 +1,12 @@
 import { readObjectsDump } from './objects-dump'
-import { sensorDataEvent } from './sensor-data-event'
+import { SensorData, sensorDataEvent } from './sensor-data-event'
 import { database } from '../../../db'
-import { objectTypes, objectConfigs, objects, blocks } from '../../../db/schema'
+import {
+  objectTypes, objectConfigs, objects,
+  blocks, measures,
+} from '../../../db/schema'
 
-const createDatabaseObjects = async () => {
+const syncMqttDatabaseObjects = async (sensorData: SensorData) => {
   const objectsDump = readObjectsDump()
 
   const getIcon = (objectId: number) => {
@@ -104,8 +107,30 @@ const createDatabaseObjects = async () => {
         .execute()
     }
   })
+
+  const { source_address, tx_time_ms_epoch, data, sensor_id } = sensorData
+
+  if (typeof data !== 'object' || data === null) {
+    return
+  }
+
+  if (Object.keys(data).length > 1) {
+    console.error('Cannot handle multiple measures')
+    return
+  }
+
+  const [measureType, value] = Object.entries(data)[0] as [string, any]
+
+  await database
+    .insert(measures)
+    .values([{
+      measureType: measureType,
+      value: Number(value).toString(),
+      sensorId: sensor_id,
+      timestamp: new Date(tx_time_ms_epoch * 1000),
+    }])
 }
 
-sensorDataEvent.addEventListener('sensor-data', () => {
-  createDatabaseObjects()
+sensorDataEvent.addEventListener('sensor-data', (data) => {
+  syncMqttDatabaseObjects(data)
 })

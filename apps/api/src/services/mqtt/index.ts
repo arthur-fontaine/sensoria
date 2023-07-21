@@ -3,7 +3,7 @@ import { mqttClient } from './utils/mqtt-client'
 import { readObjectsDump, writeSensorToDump } from './utils/objects-dump'
 import { sensorDataEvent, sensorDataSchema } from './utils/sensor-data-event'
 
-import './utils/realtime-create-database-objects'
+import './utils/sync-mqtt-database-objects'
 
 let MQTT_BASE_TOPIC: string | undefined = ''
 
