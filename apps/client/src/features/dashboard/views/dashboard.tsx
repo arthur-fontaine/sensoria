@@ -6,6 +6,7 @@ import { ObjectsMap } from '@/shared/components/objects-map'
 import { Button } from '@/shared/components/ui/button'
 import { useQuery } from '@/shared/hooks/use-query'
 import { Layout } from '@/shared/layout'
+import { Router } from '@/shared/router'
 
 export function Dashboard() {
   const block = useQuery().blocks()[0]
@@ -30,7 +31,11 @@ export function Dashboard() {
             <Button variant='secondary'>Éditer</Button>
           </li>
           <li>
-            <Button variant='secondary' size='icon'>
+            <Button
+              variant='secondary'
+              size='icon'
+              onClick={() => Router.push('Users')}
+            >
               <UsersIcon className="h-4 w-4" />
             </Button>
           </li>

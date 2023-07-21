@@ -1,14 +1,17 @@
 import { type InferResolvers, buildSchema, g } from 'garph'
 
 import type { Context } from './context'
+import { addUserMutationResolver } from './resolvers/mutations/add-user'
 import { createBlockMutationResolver } from './resolvers/mutations/create-block'
 import {
   deleteObjectMutationResolver,
 } from './resolvers/mutations/delete-object'
+import { deleteUserMutationResolver } from './resolvers/mutations/delete-user'
 import { editObjectMutationResolver } from './resolvers/mutations/edit-object'
 import {
   modifyPasswordMutationResolver,
 } from './resolvers/mutations/modify-password'
+import { modifyRoleMutationResolver } from './resolvers/mutations/modify-roles'
 import { loginQueryResolver } from './resolvers/queries/authentication'
 import {
   getBlocksQueryResolver, getHallsFromBlockQueryResolver,
@@ -28,6 +31,11 @@ import {
   getObjectsQueryResolver, getTagsFromObjectQueryResolver,
   getThresholdsFromObjectQueryResolver,
 } from './resolvers/queries/get-objects'
+import { getRolesQueryResolver } from './resolvers/queries/get-roles'
+import {
+  getRoleFromUserQueryResolver,
+  getUsersQueryResolver,
+} from './resolvers/queries/get-users'
 import {
   sensorDataSubscribeResolver,
 } from './resolvers/subscriptions/subscribe-to-sensor-data'
@@ -36,10 +44,12 @@ import type { hallType } from './schemas/hall'
 import { measureType } from './schemas/measure'
 import { notificationsType } from './schemas/notifications'
 import { objectInputType, objectType } from './schemas/object'
+import { roleType } from './schemas/roles'
 import type { tagType } from './schemas/tag'
 import type { thresholdType } from './schemas/threshold'
 import type { thresholdTriggerType } from './schemas/threshold-trigger'
 import type { triggerType } from './schemas/trigger'
+import { userType } from './schemas/users'
 
 export const queryType = g.type('Query', {
   authentication: g.string()
@@ -58,6 +68,8 @@ export const queryType = g.type('Query', {
     }),
   notifications: g.ref(() => notificationsType).list()
     .description('Get all notifications'),
+  roles: g.ref(() => roleType).list().description('Get All Roles'),
+  users: g.ref(() => userType).list().description('Get all Users'),
 })
 
 export const mutationType = g.type('Mutation', {
@@ -66,6 +78,20 @@ export const mutationType = g.type('Mutation', {
       token: g.string(),
       password: g.string(),
       newPassword: g.string(),
+    }),
+  modifyRole: g.boolean()
+    .args({
+      userId: g.int(),
+      newRole: g.string(),
+    }),
+  deleteUser: g.boolean()
+    .args({
+      userId: g.int().required(),
+    }),
+  addUser: g.boolean()
+    .args({
+      name: g.string(),
+      email: g.string(),
     }),
   createBlock: g.ref(() => blockType)
     .args({
@@ -107,6 +133,7 @@ export type Resolvers = InferResolvers<{
   Threshold: typeof thresholdType
   ThresholdTrigger: typeof thresholdTriggerType
   Trigger: typeof triggerType
+  User: typeof userType
 }, { context: Context }>
 
 const resolvers: Resolvers = {
@@ -114,11 +141,16 @@ const resolvers: Resolvers = {
     objects: getObjectsQueryResolver,
     authentication: loginQueryResolver,
     notifications: getNotificationsQueryResolver,
+    roles: getRolesQueryResolver,
+    users: getUsersQueryResolver,
     blocks: getBlocksQueryResolver,
   },
   Mutation: {
     createBlock: createBlockMutationResolver,
     modifyPassword: modifyPasswordMutationResolver,
+    deleteUser: deleteUserMutationResolver,
+    addUser: addUserMutationResolver,
+    modifyRole: modifyRoleMutationResolver,
     editObject: editObjectMutationResolver,
     deleteObject: deleteObjectMutationResolver,
   },
@@ -160,6 +192,9 @@ const resolvers: Resolvers = {
   },
   Trigger: {
     // object: getObjectFromTriggerQueryResolver,
+  },
+  User: {
+    role: getRoleFromUserQueryResolver,
   },
 }
 
