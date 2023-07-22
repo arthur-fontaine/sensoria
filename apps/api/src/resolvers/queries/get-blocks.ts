@@ -50,7 +50,7 @@ export const getHallsFromBlockQueryResolver: GetHallsFromBlockQueryResolver = (
       })
       .then(rows => rows.map((hall) => ({
         ...hall,
-        map: { base64: hall.map.toString('base64url') },
+        map: { base64: hall.map.toString() },
       })))
   }
 )

@@ -31,7 +31,7 @@ async function createBlock(
     name: string,
     location: [number, number],
     halls: {
-      map: Blob | { base64: string }
+      map: Buffer | { base64: string }
       label: string
       objects: {
         objectId: number,
@@ -74,7 +74,7 @@ async function createBlock(
         hallId: number
         blockId: number
         label: string
-        map: Blob | { base64: string }
+        map: { base64: string }
         objects: {
           objectId: number
           name: string
@@ -92,9 +92,9 @@ async function createBlock(
             label,
 
             // using Buffer.from(map.base64, 'base64url') doesn't work
-            map: map instanceof Blob
-              ? Buffer.from(await map.arrayBuffer())
-              : Buffer.from(map.base64, 'base64'),
+            map: map instanceof Buffer
+              ? map
+              : Buffer.from(map.base64),
           })
           .returning({
             hallId: halls.hallId,
@@ -125,7 +125,8 @@ async function createBlock(
               .update(objects)
               .set({
                 hallId: createdHall.hallId,
-                emplacement,
+                // eslint-disable-next-line unicorn/no-null
+                emplacement: emplacement ?? null,
                 installationDate: new Date(),
               })
               .where(eq(objects.objectId, objectId))
@@ -161,7 +162,7 @@ async function createBlock(
           ...createdHall === undefined ? [] : [{
             ...createdHall,
             objects: updatedObjects,
-            map: { base64: createdHall.map.toString('base64url') },
+            map: { base64: createdHall.map.toString() },
           }],
         )
       }
@@ -198,9 +199,10 @@ async function createUser(tx: Tx, email: string, hallIds: number[]) {
 
   await database
     .insert(roles)
-    .values({
+    .values([{
       roleId: -1,
-    })
+      name: 'user',
+    }])
     .onConflictDoNothing({
       target: [roles.roleId],
     })

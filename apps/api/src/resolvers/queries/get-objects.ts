@@ -130,7 +130,7 @@ export const getHallFromObjectQueryResolver:
         .then((hall) => (
           hall && {
             ...hall,
-            map: { base64: hall.map.toString('base64url') },
+            map: { base64: hall.map.toString() },
           }))
     }
   )

@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { EyeOff } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
@@ -69,6 +69,11 @@ export function Login() {
       })
     }
   }
+
+  useEffect(() => {
+    localStorage.removeItem('token')
+    sessionStorage.removeItem('token')
+  }, [])
 
   return (
     <div className="flex items-center justify-center 

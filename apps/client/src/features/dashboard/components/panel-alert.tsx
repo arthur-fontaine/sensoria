@@ -1,10 +1,11 @@
-import { AlertTriangleIcon, BellDotIcon } from 'lucide-react'
+import { AlertTriangleIcon } from 'lucide-react'
+import type { PropsWithChildren } from 'react'
 
-import { 
-  Alert, 
-  AlertDescription, 
-  AlertTitle } from '@/shared/components/ui/alert'
-import { Button } from '@/shared/components/ui/button'
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from '@/shared/components/ui/alert'
 import { ScrollArea } from '@/shared/components/ui/scroll-area'
 import {
   Sheet,
@@ -15,18 +16,26 @@ import {
 } from '@/shared/components/ui/sheet'
 import { useQuery } from '@/shared/hooks/use-query'
 
-export function PanelAlert() {
-  const notificationsData = useQuery().notifications
-  notificationsData[0]?.importance
+export function PanelAlert(
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  { children }: PropsWithChildren<{}>,
+) {
+  const notifications = useQuery({
+    prepare({ query }) {
+      for (const notification of query.notifications) {
+        notification.importance
+      }
+    },
+  }).notifications
 
-  const importanceStyles = {
+  const importanceStyles: Record<string, string> = {
     high: 'text-red-600 border-red-600',
     medium: 'text-orange-600 border-orange-600',
     normal: '',
     post_high: 'text-green-600 border-green-600',
   }
 
-  const importanceColors = {
+  const importanceColors: Record<string, string> = {
     high: '#DC2626',
     medium: '#EA580C',
     normal: '',
@@ -37,27 +46,35 @@ export function PanelAlert() {
     <div>
       <Sheet>
         <SheetTrigger asChild>
-          <Button variant="outline" size="icon">
-            <BellDotIcon size={24}/>
-          </Button>
+          {children}
         </SheetTrigger>
-        <SheetContent 
+        <SheetContent
           className="border-none">
-          <SheetHeader 
+          <SheetHeader
             className="mb-8">
             <SheetTitle>Alertes récentes</SheetTitle>
           </SheetHeader>
           <div >
             <ScrollArea className="h-screen px-1 pr-4 ">
-              {notificationsData.map((notif, index) => {
+              {
+                notifications.length === 0 &&
+                <div
+                  className="flex flex-col items-center justify-center h-full"
+                >
+                  <span className="text-muted-foreground italic">
+                    Aucune alerte
+                  </span>
+                </div>
+              }
+              {notifications.map((notif, index) => {
                 const importanceStyle = importanceStyles[notif.importance] || ''
-                const triangleColor = importanceColors[notif.importance] 
-              || undefined
+                const triangleColor = importanceColors[notif.importance]
+                  || undefined
                 return (
-                  <Alert key={index} className={`p-6 mb-4  ${importanceStyle}`}>
+                  <Alert key={index} className={`p-6 mb-4 ${importanceStyle}`}>
                     <AlertTriangleIcon size={18}
-                      color={triangleColor} 
-                      className='mt-3 color: inherit;'/>
+                      color={triangleColor}
+                      className='mt-3 color: inherit;' />
                     <AlertTitle className='flex justify-between mb-2'>
                       <span className='line-clamp-2'>
                         {notif.measure.measureType}
