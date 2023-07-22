@@ -40,7 +40,6 @@ export function ObjectModal(properties: PropsWithChildren<ModalProperties>) {
       }))
     },
   }).objects({ id: properties.id })
-  console.log(JSON.stringify(object))
   const objectId = object?.objectId
 
   const [deleteObject] = useMutation<undefined, number>((mutation, input) => {

@@ -17,15 +17,13 @@ export async function createContext(initialContext: YogaInitialContext) {
   if (header !== null) {
     const token = header.split(' ')[1]
 
-    if (token === undefined) {
-      throw new Error('No authorization provided.')
-    }
+    if (token !== undefined) {
+      const tokenPayload = jwt.verify(token, JWT_SECRET) as jwt.JwtPayload
+      userId = tokenPayload.userId
 
-    const tokenPayload = jwt.verify(token, JWT_SECRET) as jwt.JwtPayload
-    userId = tokenPayload.userId
-
-    if (userId === undefined || typeof userId !== 'number') {
-      throw new Error('Invalid token')
+      if (typeof userId !== 'number') {
+        throw new TypeError('Invalid token')
+      }
     }
   }
 

@@ -53,8 +53,6 @@ export function writeSensorToDump(
     type: sensorType,
   })
 
-  console.log('objectsDump:', objectsDump)
-
   fs.writeFileSync(
     OBJECTS_DUMP_FILE_PATH,
     JSON.stringify(objectsDump, undefined, 2),
